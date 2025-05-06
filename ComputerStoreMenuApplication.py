@@ -130,7 +130,7 @@ class OnlineSales(wx.Frame):
         title_label.SetForegroundColour(FONT_COLOR)
         self.salesBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
-class saleStatistics(wx.Frame):
+class SaleStatistics(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Sale Statistics", size=(1000, 700))
 
