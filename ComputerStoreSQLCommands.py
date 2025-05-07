@@ -16,7 +16,8 @@ class ComputerStoreSQlConstants:
             EMAIL VARCHAR(30),
             ADDRESS VARCHAR(50),
             PHONE CHAR(10),
-            STATUS CHAR DEFAULT'R');""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
+            STATUS CHAR DEFAULT'R',
+            PRIMARY KEY(CID));""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
     #CID, PID, & BID are 5 digit strings
 
     CREDIT_CARD_DEF = """CREATE TABLE IF NOT EXISTS CREDIT_CARD
@@ -24,7 +25,7 @@ class ComputerStoreSQlConstants:
                 SECNUMBER CHAR(3) NOT NULL,
                 OWNERNAME VARCHAR(15) NOT NULL,
                 CCType VARCHAR(10) NOT NULL,
-                BILLADDRESS VARCHAR(30),
+                BILLADDRESS VARCHAR(100),
                 EXPDATE CHAR(5),
                 STOREDCARDCID CHAR(5),
                 PRIMARY KEY(CCNUMBER));"""
@@ -143,13 +144,25 @@ class ComputerStoreSQlConstants:
                     ('00002', 'Dylan', 'Clark', 'clark3246@gmail.com', '22 Roosevelt Ave, Princeton NJ, 01827', '9788662409', 'R'),
                     ('00003', 'Riley', 'Mucci', 'rileyam@icloud.com', '25 Sycamore Street, Boston MA, 03452', '1234567890', 'S'),
                     ('00004', 'Kimberly', 'Harding', 'harding7134@gmail.com', '202 Warren Street, Newark NJ, 07103', '7653458903', 'S'),
-                    ('00005', 'Richard', 'Morena', 'ram6789@icloud.com', '100 Lock Street, Newark NJ, 07103', '9784923765', 'G'),"""
+                    ('00005', 'Richard', 'Morena', 'ram6789@icloud.com', '100 Lock Street, Newark NJ, 07103', '9784923765', 'G');"""
     
-    CREDIT_CARD_DATA = """INSERT INTO CREDIT_CARD (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILADDRESS, EXPDATE, STOREDCARDCID)
+    CREDIT_CARD_DATA = """INSERT INTO CREDIT_CARD (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
                     VALUES
                     ('123456789123456', '827', 'Bob Edwards', 'Mastercard', '13 Pleasant Street, Newark NJ, 07103', '04/28', 00001),
-                    (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILADDRESS, EXPDATE, STOREDCARDCID),
-                    (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILADDRESS, EXPDATE, STOREDCARDCID)
-                    (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILADDRESS, EXPDATE, STOREDCARDCID)
-                    (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILADDRESS, EXPDATE, STOREDCARDCID)"""
+                    ('122256789993456', '437', 'Dylan Clark', 'Discover', '22 Roosevelt Ave, Princeton NJ, 01827', '08/29', 00002),
+                    ('110256780993336', '789', 'Riley Mucci', 'Mastercard', '25 Sycamore Street, Boston MA, 03452', '07/35', 00003),
+                    ('11025670093336', '789', 'Kimberly Harding', 'Mastercard', '202 Warren Street, Newark NJ, 07103', '03/28', 00004),
+                    ('34567809999999', '123', 'Richard Morena', 'Mastercard', '100 Lock Street, Newark NJ, 07103', '09/31', 00005);"""
     
+    STATISTIC_1 = """SELECT CCNUMBER, SUM(AI.QUANTITY*AI.PRICE) AS TOTAL_CHARGED
+                    FROM TRANSACTIONS T, APPEARS_IN AI
+                    WHERE T.BID = AI.BID
+                    GROUP BY CCNUMBER"""
+    
+    STATISTIC_2 = """SELECT C.CID, C.FNAME, C.LNAME, SUM(AI.QUANTITY*AI.PRICESOLD) AS TOTAL_SPENT
+                    FROM CUSTOMER C, TRANSACTIONS T, APPEARS_IN AI
+                    WHERE C.CID =T.CID AND T.BID = AI.BID
+                    GROUP BY C.CID, C.FNAME, C.LNAME
+                    ORDER BY TOTAL_SPENT DESC"""
+    
+    STATISTIC_3 = 
