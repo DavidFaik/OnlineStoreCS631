@@ -211,7 +211,7 @@ class SaleStatistics(wx.Frame):
 
         column_data = [
             {"id": 1, "columns": ["CCCNUMBER", "TOTAL_CHARGED"], "date_required": False},
-            {"id": 2, "columns": ["CID", "FNAME", "LNAME" "TOTAL_SPENT"], "date_required": False},
+            {"id": 2, "columns": ["CID", "FNAME", "LNAME", "TOTAL_SPENT"], "date_required": False},
             {"id": 3, "columns": ["PID", "PNAME", "TOTAL_SOLD"], "date_required": True, "date_ids": [200, 201]},
             {"id": 4, "columns": ["PID", "PNAME", "NUM_CUSTOMERS"], "date_required": True, "date_ids": [202, 203]},
             {"id": 5, "columns": ["CCNUMBER", "MAX_BASKET_TOTAl"], "date_required": True, "date_ids": [204, 205]},
@@ -280,6 +280,7 @@ class SaleStatistics(wx.Frame):
         
         for col_idx, col_name in enumerate(col_names):
             self.grid.SetColLabelValue(col_idx, col_name)
+            self.grid.SetColSize(col_idx, 350)
             
         self.grid.ForceRefresh()
 
@@ -297,13 +298,6 @@ class SaleStatistics(wx.Frame):
                 value = str(cell_value) if cell_value is not None else ""
                 self.grid.SetCellValue(row_idx, col_idx, value)
             
-        for row_idx, row_data in enumerate(results):
-            for col_idx, cell_value in enumerate(row_data):
-                value = str(cell_value) if cell_value is not None else ""
-                self.grid.SetCellValue(row_idx, col_idx, value)
-                
-        for col_idx in range(self.grid.GetNumberCols()):
-            self.grid.AutoSizeColumn(col_idx)
 
 if __name__ == "__main__":
     app = wx.App(False)

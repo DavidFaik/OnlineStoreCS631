@@ -22,7 +22,7 @@ class SQLConnections:
             "SILVER_AND_ABOVE": self.sql.SILVER_AND_ABOVE_DEF,
             "CREDIT_CARD": self.sql.CREDIT_CARD_DEF,
             "SHIPPING_ADDRESS": self.sql.SHIPPING_ADDRESS_DEF,
-            "TRANSACTIONS": self.sql.TRANSACTIONS_DEF,
+            "TRANSACTION": self.sql.TRANSACTION_DEF,
             "BASKET": self.sql.BASKET_DEF,
             "APPEARS_IN": self.sql.APPEARS_IN_DEF,
             "OFFER_PRODUCT": self.sql.OFFER_PRODUCT_DEF,

@@ -3,8 +3,10 @@
 class ComputerStoreSQlConstants:
     """
     A class containing SQL constants for the Computer Store application. 
-    Including create table defintions, altering table constraints, adding test data,
-    and queries for the applications.
+    """
+
+    """
+    1) SQL Table Definitons
     """
     SILVER_AND_ABOVE_DEF = """CREATE TABLE IF NOT EXISTS SILVER_AND_ABOVE
                     (CID CHAR(5) NOT NULL,
@@ -86,6 +88,9 @@ class ComputerStoreSQlConstants:
                 BTYPE VARCHAR(15),
                 WEIGHT INT);"""
     
+    """
+    2) SQL Table Constraints
+    """
     SILVER_AND_ABOVE_CONSTRAINTS = """ALTER TABLE SILVER_AND_ABOVE
                                     ADD CONSTRAINT CUSTOMERSILVERFK FOREIGN KEY CID REFERENCES CUSTOMER
                                     ON DELETE CASCADE ON UPDATE CASCADE;"""
@@ -139,6 +144,9 @@ class ComputerStoreSQlConstants:
                         ADD CONSTRAINT LAPTOPPIDFK FOREIGN KEY PID REFERENCES COMPUTER
                         ON DELETE CASCADE ON UPDATE CASCADE;"""
     
+    """
+    3) SQL Populate Table Commands
+    """
     CUSTOMER_DATA = """INSERT INTO CUSTOMER (CID, FNAME, LNAME, EMAIL, ADDRESS, PHONE, STATUS)
                     VALUES
                     ('00001', 'Bob', 'Edwards', 'bobedwards123@gmail.com', '13 Pleasant Street, Newark NJ, 07103', '9783022229', 'R'),
@@ -155,6 +163,9 @@ class ComputerStoreSQlConstants:
                     ('11025670093336', '789', 'Kimberly Harding', 'Mastercard', '202 Warren Street, Newark NJ, 07103', '03/28', 00004),
                     ('34567809999999', '123', 'Richard Morena', 'Mastercard', '100 Lock Street, Newark NJ, 07103', '09/31', 00005);"""
     
+    """
+    4) SQL Statistic Queries
+    """
     STATISTIC_1 = """SELECT CCNUMBER, SUM(AI.QUANTITY*AI.PRICESOLD) AS TOTAL_CHARGED
                     FROM TRANSACTION T, APPEARS_IN AI
                     WHERE T.BID = AI.BID
@@ -170,7 +181,7 @@ class ComputerStoreSQlConstants:
                     FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P
                     WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
                     GROUP BY AI.PID, P.PNAME
-                    ORDER BY TOTAL_SPENT DESC;"""
+                    ORDER BY TOTAL_SOLD DESC;"""
     
     STATISTIC_4 = """SELECT AI.PID, P.PNAME, COUNT(DISTINCT T.CID) AS NUM_CUSTOMERS
                     FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P
@@ -178,9 +189,9 @@ class ComputerStoreSQlConstants:
                     GROUP BY AI.PID, P.PNAME
                     ORDER BY NUM_CUSTOMERS DESC;"""
 
-    STATISTIC_5 = """SELECT T.CCNUMBER, MAX(BASKET_TOTAL) AS MAX_BASKET_TOTAL
+    STATISTIC_5 = """SELECT CCNUMBER, MAX(BASKET_TOTAL) AS MAX_BASKET_TOTAL
                     FROM (
-                        SELECT T.CCNUMBER, T.BID, SUM(AI.QUANTITY*AI.PRICE) AS BASKET_TOTAL
+                        SELECT T.CCNUMBER, T.BID, SUM(AI.QUANTITY*AI.PRICESOLD) AS BASKET_TOTAL
                         FROM TRANSACTION T, APPEARS_IN AI
                         WHERE T.BID = AI.BID AND T.TDATE BETWEEN %s AND %s
                         GROUP BY T.CCNUMBER, T.BID
