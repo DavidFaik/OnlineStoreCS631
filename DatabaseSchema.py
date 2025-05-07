@@ -1,3 +1,5 @@
+# DatabaseSchema.py connects SQL statements to the SQL server (Connects front end & back end)
+
 import mysql.connector
 from ComputerStoreSQLCommands import ComputerStoreSQlConstants
 
