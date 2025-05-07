@@ -9,15 +9,12 @@ class DatabaseSchema:
             user=user,
             password=password
         )
-        self.DB_NAME = "OnlineComputerStore"
         self.cursor = self.conn.cursor()
-        self.create_tables()
-        self.populate_tables()
-        self.update_constraints()
-
-    def create_database(self):
+        self.DB_NAME = "OnlineComputerStore"
         self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
         self.conn.database = self.DB_NAME
+        self.create_tables()
+        self.populate_tables()
 
     def create_tables(self):
         tables = {
@@ -40,7 +37,11 @@ class DatabaseSchema:
             self.cursor.execute(ddl)
 
     def populate_tables(self):
-        pass
+        test_data = [self.sql.CUSTOMER_DATA]
+        for data in test_data:
+            print("Populating Tables...")
+            self.cursor.execute(data)
+            self.conn.commit()
 
     def update_constraints(self):
         pass
@@ -49,8 +50,7 @@ if __name__ == "__main__":
     schema = DatabaseSchema(
         host="localhost",
         user="root",
-        password="KHlovesburton13!",
-        db_name="OnlineStoreDB"
+        password="KHlovesburton13!"
     )
-    schema.close()
+
 
