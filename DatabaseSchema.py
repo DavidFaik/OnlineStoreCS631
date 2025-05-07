@@ -49,8 +49,7 @@ if __name__ == "__main__":
     schema = DatabaseSchema(
         host="localhost",
         user="root",
-        password="KHlovesburton13!",
-        db_name="OnlineStoreDB"
+        password= password,
     )
     schema.close()
 
