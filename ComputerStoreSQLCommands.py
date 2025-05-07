@@ -11,17 +11,18 @@ class ComputerStoreSQlConstants:
     """
     SILVER_AND_ABOVE_DEF = """CREATE TABLE IF NOT EXISTS SILVER_AND_ABOVE
                     (CID CHAR(5) NOT NULL,
-                    CREDITLINE INT);"""
+                    CREDITLINE INT,
+                    PRIMARY KEY(CID));"""
 
     CUSTOMER_DEF = """CREATE TABLE IF NOT EXISTS CUSTOMER
             (CID CHAR(5) NOT NULL, 
             FNAME VARCHAR(15) NOT NULL,
             LNAME VARCHAR(15) NOT NULL,
-            EMAIL VARCHAR(30),
+            EMAIL VARCHAR(30) UNIQUE,
             ADDRESS VARCHAR(100),
             PHONE CHAR(10),
             STATUS CHAR DEFAULT'R',
-            PRIMARY KEY(CID));""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
+            PRIMARY KEY(CID);""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
     #CID, PID, & BID are 5 digit strings
 
     CREDIT_CARD_DEF = """CREATE TABLE IF NOT EXISTS CREDIT_CARD
@@ -37,13 +38,14 @@ class ComputerStoreSQlConstants:
     SHIPPING_ADDRESS_DEF = """CREATE TABLE IF NOT EXISTS SHIPPING_ADDRESS
                     (CID CHAR(5) NOT NULL,
                     SANAME VARCHAR(50) NOT NULL,
-                    RECEPIENTNAME VARCHAR(30),
+                    RECEPIENTNAME VARCHAR(30) NOT NULL,
                     STREET VARCHAR(15),
                     SNUMBER INT,
                     CITY VARCHAR(20),
                     ZIP CHAR(5),
                     STATE CHAR(2),
-                    COUNTRY VARCHAR(15));"""
+                    COUNTRY VARCHAR(15),
+                    PRIMARY KEY(CID, SANAME));"""
 
     TRANSACTION_DEF = """CREATE TABLE IF NOT EXISTS TRANSACTION
                 (BID CHAR(5) NOT NULL,
@@ -51,21 +53,25 @@ class ComputerStoreSQlConstants:
                 CID CHAR(5) NOT NULL,
                 SANAME VARCHAR(30) NOT NULL,
                 TDATE DATE,
-                TTAG CHAR DEFAULT'C');""" ##TTAG options assume C=confirmed, S=Shipped, E=Enroute, D=Delivered, L=Lost
+                TTAG CHAR DEFAULT'C',
+                PRIMARY KEY(BID, CCNUMBER, CID, SANAME));""" ##TTAG options assume C=confirmed, S=Shipped, E=Enroute, D=Delivered, L=Lost
 
     BASKET_DEF = """CREATE TABLE IF NOT EXISTS BASKET
             (CID CHAR(5) NOT NULL,
-            BID CHAR(5) NOT NULL);"""
+            BID CHAR(5) NOT NULL,
+            PRIMARY KEY(BID));"""
 
     APPEARS_IN_DEF = """CREATE TABLE IF NOT EXISTS APPEARS_IN
                 (BID CHAR(5) NOT NULL,
                 PID CHAR(5) NOT NULL,
                 QUANTITY INT,
-                PRICESOLD DECIMAL(10,2));"""
+                PRICESOLD DECIMAL(10,2),
+                PRIMARY KEY(BID,PID));"""
 
     OFFER_PRODUCT_DEF = """CREATE TABLE IF NOT EXISTS OFFER_PRODUCT
                     (PID CHAR(5) NOT NULL,
-                    OFFERPRICE DECIMAL(10,2));"""
+                    OFFERPRICE DECIMAL(10,2),
+                    PRIMARY KEY(PID));"""
 
     PRODUCT_DEF = """CREATE TABLE IF NOT EXISTS PRODUCT
                 (PID CHAR(5) NOT NULL,
@@ -73,21 +79,25 @@ class ComputerStoreSQlConstants:
                 PNAME VARCHAR(15),
                 PPRICE DECIMAL(10,2),
                 DESCRIPTION VARCHAR(15),
-                PQUANTITY INT);""" ##PType options assume C=Computer P=Printer L=Laptop M=Miscelenous
+                PQUANTITY INT DEFAULT 0,
+                PRIMARY KEY(PID));""" ##PType options assume C=Computer P=Printer L=Laptop M=Miscelenous
 
     COMPUTER_DEF = """CREATE TABLE IF NOT EXISTS COMPUTER
                 (PID CHAR(5) NOT NULL,
-                CPUTYPE VARCHAR(30));"""
+                CPUTYPE VARCHAR(30),
+                PRIMARY KEY(PID));"""
 
     PRINTER_DEF = """CREATE TABLE IF NOT EXISTS PRINTER
                 (PID CHAR(5) NOT NULL,
                 PRINTERTYPE VARCHAR(10),
-                RESOLUTION VARCHAR(10));"""
+                RESOLUTION VARCHAR(10),
+                PRIMARY KEY(PID));"""
 
     LAPTOP_DEF = """CREATE TABLE IF NOT EXISTS LAPTOP
                 (PID CHAR(5) NOT NULL,
                 BTYPE VARCHAR(15),
-                WEIGHT INT);"""
+                WEIGHT INT,
+                PRIMARY KEY(PID));"""
     
     """
     2) SQL Table Constraints
