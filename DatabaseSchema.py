@@ -1,7 +1,7 @@
 import mysql.connector
 from ComputerStoreSQLCommands import ComputerStoreSQlConstants
 
-class DatabaseSchema:
+class SQLConnections:
     def __init__(self, host, user, password):
         self.sql = ComputerStoreSQlConstants()
         self.conn = mysql.connector.connect(
@@ -69,12 +69,13 @@ class DatabaseSchema:
         self.conn.commit()
     
     def register_shipping_address(self):
-        insert_shipping_address = """
-                INSERT INTO SHIPPING_ADDRESS (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """
-        self.cursor.execute(insert_shipping_address, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
-        self.conn.commit()
+        pass
+        #insert_shipping_address = """
+                #INSERT INTO SHIPPING_ADDRESS (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
+                #VALUES (%s, %s, %s, %s, %s, %s, %s)
+            #"""
+        #self.cursor.execute(insert_shipping_address, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
+        #self.conn.commit()
     
     def statistic_1(self):
         self.cursor.execute(self.sql.STATISTIC_1)
@@ -101,7 +102,7 @@ class DatabaseSchema:
         return self.cursor.fetchall()
 
 if __name__ == "__main__":
-    schema = DatabaseSchema(
+    schema = SQLConnections(
         host="localhost",
         user="root",
         password="KHlovesburton13!"
