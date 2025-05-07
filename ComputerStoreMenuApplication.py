@@ -1,4 +1,6 @@
 import wx
+import wx.grid as gridlib
+from DatabaseSchema import SQLConnections
 
 class MenuApplication(wx.Frame):
     def __init__(self, parent):
@@ -18,11 +20,9 @@ class MenuApplication(wx.Frame):
         title_label.SetForegroundColour(FONT_COLOR)
         mainBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
-        btn1 = wx.Button(mainWindow, label="Registration + Management", size=(250, 40))
-        btn2 = wx.Button(mainWindow, label="Online Sales", size=(250, 40))
-        btn3 = wx.Button(mainWindow, label="Sale Statistics", size=(250, 40))
-
-        for btn, event in [(btn1, self.registrationAndManagement), (btn2, self.onlineSales), (btn3, self.saleStatistics)]:
+        main_menu_labels = [("Registration + Management", self.registrationAndManagement), ("Online Sales", self.onlineSales), ("Sale Statistics", self.saleStatistics)]
+        for label, event in main_menu_labels:
+            btn = wx.Button(mainWindow, label=label, size=(250, 40))
             btn.SetBackgroundColour(BUTTON_COLOR)
             btn.SetForegroundColour(FONT_COLOR)
             btn.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
@@ -147,6 +147,90 @@ class SaleStatistics(wx.Frame):
         title_label.SetFont(title_font)
         title_label.SetForegroundColour(FONT_COLOR)
         self.statisticsBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
+
+        statistic_labels = [
+            ("1) Total Amount Charged per Credit Card", self.statistic_1),
+            ("2) 10 Best Cutsomers", self.statistic_2),
+            ("3) Most Frequently Sold Products", self.statistic_3),
+            ("4) Products Sold to Highest Number of Customers", self.statistic_4),
+            ("5) Maximum Basket Total per Credit Card", self.statistic_5),
+            ("6) Average Product Price Per Type", self.statistic_6)
+        ]
+
+        for label,event in statistic_labels:
+            btn = wx.Button(self.panel, label=label, size=(400, 40))
+            btn.SetBackgroundColour(BUTTON_COLOR)
+            btn.SetForegroundColour(FONT_COLOR)
+            btn.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+            self.statisticsBox.Add(btn, 0, wx.ALIGN_CENTER | wx.ALL, 10)
+            btn.Bind(wx.EVT_BUTTON, event)
+
+        self.panel.SetSizer(self.statisticsBox)
+        self.Centre()
+        self.Show()
+    
+    def    def populate_grid(self, results, column_names):
+        """Populate grid with query results"""
+        num_rows = len(results)
+        num_cols = len(column_names)
+        
+        # Create grid with appropriate dimensions
+        self.grid.CreateGrid(num_rows, num_cols)
+        
+        # Set column labels
+        for col_idx, col_name in enumerate(column_names):
+            self.grid.SetColLabelValue(col_idx, col_name)
+            
+        # Populate grid with data
+        for row_idx, row_data in enumerate(results):
+            for col_idx, cell_value in enumerate(row_data):
+                value = str(cell_value) if cell_value is not None else ""
+                self.grid.SetCellValue(row_idx, col_idx, value)
+                
+        # Auto-size columns
+        for col_idx in range(num_cols):
+            self.grid.AutoSizeColumn(col_idx)
+            
+        # Refresh grid
+        self.grid.ForceRefresh()
+        self.panel.Layout()
+        
+    def statistic_1(self, event):
+        pass
+
+    def statistic_2(self, event):
+        pass
+
+    def statistic_3(self,event):
+        # Date picker panel for statistics that need date ranges
+        self.date_panel = wx.Panel(self.panel)
+        self.date_panel.SetBackgroundColour(BG_COLOR)
+        date_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        # Start date picker
+        start_label = wx.StaticText(self.date_panel, label="Start Date:")
+        start_label.SetForegroundColour(FONT_COLOR)
+        date_sizer.Add(start_label, 0, wx.ALIGN_CENTER | wx.RIGHT, 5)
+        
+        self.start_date = wx.adv.DatePickerCtrl(self.date_panel, style=wx.adv.DP_DROPDOWN)
+        date_sizer.Add(self.start_date, 0, wx.RIGHT, 20)
+        
+        # End date picker
+        end_label = wx.StaticText(self.date_panel, label="End Date:")
+        end_label.SetForegroundColour(FONT_COLOR)
+        date_sizer.Add(end_label, 0, wx.ALIGN_CENTER | wx.RIGHT, 5)
+        
+        self.end_date = wx.adv.DatePickerCtrl(self.date_panel, style=wx.adv.DP_DROPDOWN)
+        date_sizer.Add(self.end_date, 0, wx.RIGHT, 20)
+
+    def statistic_4(self,event):
+        pass
+
+    def statistic_5(self,event):
+        pass
+
+    def statistic_6(self,event):
+        pass
 
 if __name__ == "__main__":
     app = wx.App(False)
