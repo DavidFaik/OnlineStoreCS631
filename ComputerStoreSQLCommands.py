@@ -1,9 +1,10 @@
-##Constaints for SQL Table Definitions
 ##Note: must populate tables first with basic data than add foregin keys to avoid referencing problems
 
 class ComputerStoreSQlConstants:
     """
-    A class containing SQL constants for the Computer Store application.
+    A class containing SQL constants for the Computer Store application. 
+    Including create table defintions, altering table constraints, adding test data,
+    and queries for the applications.
     """
     SILVER_AND_ABOVE_DEF = """CREATE TABLE IF NOT EXISTS SILVER_AND_ABOVE
                     (CID CHAR(5) NOT NULL,
@@ -157,12 +158,38 @@ class ComputerStoreSQlConstants:
     STATISTIC_1 = """SELECT CCNUMBER, SUM(AI.QUANTITY*AI.PRICE) AS TOTAL_CHARGED
                     FROM TRANSACTIONS T, APPEARS_IN AI
                     WHERE T.BID = AI.BID
-                    GROUP BY CCNUMBER"""
+                    GROUP BY CCNUMBER;"""
     
     STATISTIC_2 = """SELECT C.CID, C.FNAME, C.LNAME, SUM(AI.QUANTITY*AI.PRICESOLD) AS TOTAL_SPENT
                     FROM CUSTOMER C, TRANSACTIONS T, APPEARS_IN AI
                     WHERE C.CID =T.CID AND T.BID = AI.BID
                     GROUP BY C.CID, C.FNAME, C.LNAME
-                    ORDER BY TOTAL_SPENT DESC"""
+                    ORDER BY TOTAL_SPENT DESC;"""
     
-    STATISTIC_3 = 
+    STATISTIC_3 = """SELECT AI.PID, P.PNAME, SUM(AI.QUANTITY) AS TOTAL_SOLD
+                    FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P
+                    WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
+                    GROUP BY AI.PID, P.PNAME
+                    ORDER BY TOTAL_SPENT DESC;"""
+    
+    STATISTIC_4 = """SELECT AI.PID, P.PNAME, COUNT(DISTINCT T.CID) AS NUM_CUSTOMERS
+                    FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P
+                    WHERE T.BID=AI.BID AND AI.PID = P.PID AND BETWEEN %s AND %s
+                    GROUP BY AI.PID, P.PNAME
+                    ORDER BY NUM_CUSTOMERS DESC;"""
+
+    STATISTIC_5 = """SELECT T.CCNUMBER, MAX(BASKET_TOTAL) AS MAX_BASKET_TOTAL
+                    FROM (
+                        SELECT T.CCNUMBER, T.BID, SUM(AI.QUANTITY*AI.PRICE) AS BASKET_TOTAL
+                        FROM TRANSACTIONS T, APPEARS_IN AI
+                        WHERE T.BID = AI.BID AND T.TDATE BETWEEN %s AND %s
+                        GROUP BY T.CCNUMBER, T.BID
+                    )
+                    AS BASKET_TOTALS
+                    GROUP BY CCNUMBER;"""
+
+    STATISTIC_6 = """SELECT P.PTYPE, AVG(AI.PRICESOLD AS AVG_AVG_SELLING_PRICE)
+                    FROM TRANSACTIONS T, APPEARS_IN AI, PRODUCT P
+                    WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
+                    GROUP BY P.PTYPE;"""
+
