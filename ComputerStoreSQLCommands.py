@@ -42,7 +42,7 @@ class ComputerStoreSQlConstants:
                     STATE CHAR(2),
                     COUNTRY VARCHAR(15));"""
 
-    TRANSACTIONS_DEF = """CREATE TABLE IF NOT EXISTS TRANSACTIONS
+    TRANSACTION_DEF = """CREATE TABLE IF NOT EXISTS TRANSACTION
                 (BID CHAR(5) NOT NULL,
                 CCNUMBER CHAR(16) NOT NULL,
                 CID CHAR(5) NOT NULL,
@@ -155,13 +155,13 @@ class ComputerStoreSQlConstants:
                     ('11025670093336', '789', 'Kimberly Harding', 'Mastercard', '202 Warren Street, Newark NJ, 07103', '03/28', 00004),
                     ('34567809999999', '123', 'Richard Morena', 'Mastercard', '100 Lock Street, Newark NJ, 07103', '09/31', 00005);"""
     
-    STATISTIC_1 = """SELECT CCNUMBER, SUM(AI.QUANTITY*AI.PRICE) AS TOTAL_CHARGED
-                    FROM TRANSACTIONS T, APPEARS_IN AI
+    STATISTIC_1 = """SELECT CCNUMBER, SUM(AI.QUANTITY*AI.PRICESOLD) AS TOTAL_CHARGED
+                    FROM TRANSACTION T, APPEARS_IN AI
                     WHERE T.BID = AI.BID
                     GROUP BY CCNUMBER;"""
     
     STATISTIC_2 = """SELECT C.CID, C.FNAME, C.LNAME, SUM(AI.QUANTITY*AI.PRICESOLD) AS TOTAL_SPENT
-                    FROM CUSTOMER C, TRANSACTIONS T, APPEARS_IN AI
+                    FROM CUSTOMER C, TRANSACTION T, APPEARS_IN AI
                     WHERE C.CID =T.CID AND T.BID = AI.BID
                     GROUP BY C.CID, C.FNAME, C.LNAME
                     ORDER BY TOTAL_SPENT DESC;"""
@@ -174,22 +174,22 @@ class ComputerStoreSQlConstants:
     
     STATISTIC_4 = """SELECT AI.PID, P.PNAME, COUNT(DISTINCT T.CID) AS NUM_CUSTOMERS
                     FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P
-                    WHERE T.BID=AI.BID AND AI.PID = P.PID AND BETWEEN %s AND %s
+                    WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
                     GROUP BY AI.PID, P.PNAME
                     ORDER BY NUM_CUSTOMERS DESC;"""
 
     STATISTIC_5 = """SELECT T.CCNUMBER, MAX(BASKET_TOTAL) AS MAX_BASKET_TOTAL
                     FROM (
                         SELECT T.CCNUMBER, T.BID, SUM(AI.QUANTITY*AI.PRICE) AS BASKET_TOTAL
-                        FROM TRANSACTIONS T, APPEARS_IN AI
+                        FROM TRANSACTION T, APPEARS_IN AI
                         WHERE T.BID = AI.BID AND T.TDATE BETWEEN %s AND %s
                         GROUP BY T.CCNUMBER, T.BID
                     )
                     AS BASKET_TOTALS
                     GROUP BY CCNUMBER;"""
 
-    STATISTIC_6 = """SELECT P.PTYPE, AVG(AI.PRICESOLD AS AVG_AVG_SELLING_PRICE)
-                    FROM TRANSACTIONS T, APPEARS_IN AI, PRODUCT P
+    STATISTIC_6 = """SELECT P.PTYPE, AVG(AI.PRICESOLD) AS AVG_AVG_SELLING_PRICE
+                    FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P
                     WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
                     GROUP BY P.PTYPE;"""
 

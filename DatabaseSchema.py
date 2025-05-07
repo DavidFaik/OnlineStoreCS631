@@ -81,7 +81,7 @@ class SQLConnections:
         self.cursor.execute(self.sql.STATISTIC_1)
         return self.cursor.fetchall()
     
-    def statistic_1(self, start_date=None, end_date=None):
+    def statistic_2(self, start_date=None, end_date=None):
         self.cursor.execute(self.sql.STATISTIC_2)
         return self.cursor.fetchall()
     

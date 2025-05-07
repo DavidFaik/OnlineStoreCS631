@@ -5,7 +5,7 @@ from DatabaseSchema import SQLConnections
 class MenuApplication(wx.Frame):
     def __init__(self, parent):
         #Main Window: 1) Registration + Management 2) Online Sales 3) Sale Statstics 
-        super().__init__(parent, title="Online Computer Store", size=(1200, 800))    
+        super().__init__(parent, title="Online Computer Store", size=(500, 400))    
         BG_COLOR = wx.Colour("#D6EAF8")         
         FONT_COLOR = wx.Colour("#003366")     
         BUTTON_COLOR = wx.Colour("#FFFFFF")
@@ -247,7 +247,8 @@ class SaleStatistics(wx.Frame):
         
         try:
             if data["date_required"]:
-                start_date, end_date = self.validate_dates(data["date_ids"][0], data["date_ids"][1])
+                start_date = data["date_ids"][0]
+                end_date = data["date_ids"][1]
                 if not start_date:
                     return
                 
