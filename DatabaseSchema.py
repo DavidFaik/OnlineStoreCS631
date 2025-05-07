@@ -37,14 +37,44 @@ class DatabaseSchema:
             self.cursor.execute(ddl)
 
     def populate_tables(self):
-        test_data = [self.sql.CUSTOMER_DATA]
+        test_data = [self.sql.CUSTOMER_DATA, self.sql.CREDIT_CARD_DATA]
         for data in test_data:
-            print("Populating Tables...")
             self.cursor.execute(data)
             self.conn.commit()
 
     def update_constraints(self):
-        pass
+        constraints = [self.sql.SILVER_AND_ABOVE_CONSTRAINTS, self.sql.SHIPPING_ADDRESS_CONSTRAINTS, self.sql.APPEARS_IN_CONSTRAINTS, 
+                       self.sql.BASKET_CONSTRAINTS, self.sql.CREDIT_CARD_CONSTRAINTS, self.sql.LAPTOP_CONSTAINTS, 
+                       self.sql.PRODUCT_CONSTRAINTS, self.sql.COMPUTER_CONSTRAINTS, self.sql.PRINTER_CONSTRAINTS,
+                       self.sql.OFFER_PRODUCT_CONSTAINTS, self.sql.TRANSACTION_CONSTRAINTS]
+        for table in constraints:
+            self.cursor.execute(table)
+            self.conn.commit()
+
+    def register_customer(self, cid, fname, lname, email, address, phone):
+        insert_customer = """
+                INSERT INTO CUSTOMER (CID, FNAME, LNAME, EMAIL, ADDRESS, PHONE)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """
+        self.cursor.execute(insert_customer, (cid, fname, lname, email, address, phone))
+        self.conn.commit()
+    
+    def register_credit_card(self, ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid):
+        ##How will the ownername and storedcardcid be stored so they don't have to input that data?
+        insert_credit_card = """
+                INSERT INTO CREDIT_CARD (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+        self.cursor.execute(insert_credit_card, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
+        self.conn.commit()
+    
+    def register_shipping_address(self):
+        insert_shipping_address = """
+                INSERT INTO SHIPPING_ADDRESS (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+        self.cursor.execute(insert_shipping_address, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
+        self.conn.commit()
 
 if __name__ == "__main__":
     schema = DatabaseSchema(
