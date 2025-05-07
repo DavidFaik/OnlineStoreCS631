@@ -22,7 +22,7 @@ class ComputerStoreSQlConstants:
             ADDRESS VARCHAR(100),
             PHONE CHAR(10),
             STATUS CHAR DEFAULT'R',
-            PRIMARY KEY(CID);""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
+            PRIMARY KEY(CID));""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
     #CID, PID, & BID are 5 digit strings
 
     CREDIT_CARD_DEF = """CREATE TABLE IF NOT EXISTS CREDIT_CARD
@@ -273,7 +273,14 @@ class ComputerStoreSQlConstants:
                     WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
                     GROUP BY P.PTYPE;"""
 
- # Credit‑Card
+    """
+    5) SQL Credit Card INSERT, UPDATE & DELETE
+    """
+    INSERT_CREDIT_CARD = """INSERT INTO SHIPPING_ADDRESS
+                                 (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, 
+                                 BILLADDRESS, EXPDATE)
+                                 VALUES (%s,%s,%s,%s,%s,%s);"""
+    
     UPDATE_CREDIT_CARD = """UPDATE CREDIT_CARD
                             SET SECNUMBER = %s,
                                 OWNERNAME = %s,
@@ -284,7 +291,9 @@ class ComputerStoreSQlConstants:
 
     DELETE_CREDIT_CARD = "DELETE FROM CREDIT_CARD WHERE CCNUMBER = %s;"
 
-    # Shipping‑Address
+    """
+    6) SQL Shipping Adrress INSERT, UPDATE & DELETE
+    """
     INSERT_SHIPPING_ADDRESS = """INSERT INTO SHIPPING_ADDRESS
                                  (CID, SANAME, RECEPIENTNAME, STREET, SNUMBER,
                                   CITY, ZIP, STATE, COUNTRY)
@@ -298,7 +307,9 @@ class ComputerStoreSQlConstants:
     DELETE_SHIPPING_ADDRESS = """DELETE FROM SHIPPING_ADDRESS
                                  WHERE CID=%s AND SANAME=%s;"""
 
-    # Basket & Transaction
+    """
+    7) SQL Basket & Transaction INSERT, UPDATE & DELETE
+    """
     INSERT_BASKET   = "INSERT INTO BASKET (CID, BID) VALUES (%s,%s);"
 
     INSERT_APPEARS  = """INSERT INTO APPEARS_IN

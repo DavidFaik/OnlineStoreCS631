@@ -2,6 +2,7 @@
 
 import mysql.connector
 from ComputerStoreSQLCommands import ComputerStoreSQlConstants
+from datetime import date
 
 class SQLConnections:
     def __init__(self, host, user, password):
@@ -89,32 +90,6 @@ class SQLConnections:
         for table in constraints:
             self.cursor.execute(table)
             self.conn.commit()
-
-    def register_customer(self, cid, fname, lname, email, address, phone):
-        insert_customer = """
-                INSERT INTO CUSTOMER (CID, FNAME, LNAME, EMAIL, ADDRESS, PHONE)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """
-        self.cursor.execute(insert_customer, (cid, fname, lname, email, address, phone))
-        self.conn.commit()
-    
-    def register_credit_card(self, ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid):
-        ##How will the ownername and storedcardcid be stored so they don't have to input that data?
-        insert_credit_card = """
-                INSERT INTO CREDIT_CARD (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """
-        self.cursor.execute(insert_credit_card, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
-        self.conn.commit()
-    
-    def register_shipping_address(self):
-        pass
-        #insert_shipping_address = """
-                #INSERT INTO SHIPPING_ADDRESS (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
-                #VALUES (%s, %s, %s, %s, %s, %s, %s)
-            #"""
-        #self.cursor.execute(insert_shipping_address, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
-        #self.conn.commit()
     
     def statistic_1(self, start_date=None, end_date=None):
         self.cursor.execute(self.sql.STATISTIC_1)
@@ -148,6 +123,13 @@ class SQLConnections:
         return "00001"
 
     # Credit‑Card
+    def register_credit_card(self, ccnumber, secnumber, ownername,
+                           cctype, billaddress, expdate):
+        self.cursor.execute(self.sql.INSERT_CREDIT_CARD,
+                            (secnumber, ownername, cctype,
+                             billaddress, expdate, ccnumber))
+        self.conn.commit()
+
     def update_credit_card(self, ccnumber, secnumber, ownername,
                            cctype, billaddress, expdate):
         self.cursor.execute(self.sql.UPDATE_CREDIT_CARD,
