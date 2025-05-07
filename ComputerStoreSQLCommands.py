@@ -18,7 +18,7 @@ class ComputerStoreSQlConstants:
             FNAME VARCHAR(15) NOT NULL,
             LNAME VARCHAR(15) NOT NULL,
             EMAIL VARCHAR(30),
-            ADDRESS VARCHAR(50),
+            ADDRESS VARCHAR(100),
             PHONE CHAR(10),
             STATUS CHAR DEFAULT'R',
             PRIMARY KEY(CID));""" #Status R=Regular, S=Silver, G=Gold, & P=Platinum
@@ -27,7 +27,7 @@ class ComputerStoreSQlConstants:
     CREDIT_CARD_DEF = """CREATE TABLE IF NOT EXISTS CREDIT_CARD
                 (CCNUMBER CHAR(16) NOT NULL,
                 SECNUMBER CHAR(3) NOT NULL,
-                OWNERNAME VARCHAR(15) NOT NULL,
+                OWNERNAME VARCHAR(30) NOT NULL,
                 CCType VARCHAR(10) NOT NULL,
                 BILLADDRESS VARCHAR(100),
                 EXPDATE CHAR(5),
@@ -77,7 +77,7 @@ class ComputerStoreSQlConstants:
 
     COMPUTER_DEF = """CREATE TABLE IF NOT EXISTS COMPUTER
                 (PID CHAR(5) NOT NULL,
-                CPUTYPE VARCHAR(10));"""
+                CPUTYPE VARCHAR(30));"""
 
     PRINTER_DEF = """CREATE TABLE IF NOT EXISTS PRINTER
                 (PID CHAR(5) NOT NULL,
@@ -172,18 +172,18 @@ class ComputerStoreSQlConstants:
 
     SHIPPING_ADDRESS_DATA = """INSERT INTO SHIPPING_ADDRESS (CID, SANAME, RECEPIENTNAME, STREET, SNUMBER, CITY, ZIP, STATE, COUNTRY)
                         VALUES
-                        ('C0001', 'Edward's Home', 'Bob Edwards', 'Pleasant Street', 13, 'Newark', '07103', 'NJ', 'USA'),
+                        ('C0001', 'Edwards Home', 'Bob Edwards', 'Pleasant Street', 13, 'Newark', '07103', 'NJ', 'USA'),
                         ('C0002', 'Dylan Work', 'Dylan Clark', 'Roosevelt Ave', 22, 'Princeton', '01827', 'NJ', 'USA'),
                         ('C0003', 'Riley Home', 'Riley Mucci', 'Sycamore Street', 25, 'Boston', '03452', 'MA', 'USA'),
-                        ('C0004', 'Harding's Residence', 'Kimberly Harding', 'Warren Street', 202, 'Newark', '07103', 'NJ', 'USA'),
+                        ('C0004', 'Hardings Residence', 'Kimberly Harding', 'Warren Street', 202, 'Newark', '07103', 'NJ', 'USA'),
                         ('C0005', 'Richard Work', 'Richard Morena', 'Lock Street', 100, 'Newark', '07103', 'NJ', 'USA');"""
 
     TRANSACTION_DATA = """INSERT INTO TRANSACTION (BID, CCNUMBER, CID, SANAME, TDATE, TTAG) 
                         VALUES
-                        ('B0001', '123456789123456', '00001', 'Edward's Home', '2024-01-15', 'C'),
+                        ('B0001', '123456789123456', '00001', 'Edwards Home', '2024-01-15', 'C'),
                         ('B0002', '122256789993456', '00002', 'Dylan Work', '2024-02-12', 'S'),
                         ('B0003', '110256780993336', '00003', 'Riley Home', '2024-03-20', 'C'),
-                        ('B0004', '11025670093336', '00004', 'Harding's Residence', '2024-04-05', 'E'),
+                        ('B0004', '11025670093336', '00004', 'Hardings Residence', '2024-04-05', 'E'),
                         ('B0005', '34567809999999', '00005', 'Richard Work', '2024-05-01', 'L');"""
 
     BASKET_DATA = """INSERT INTO BASKET (CID, BID) 
@@ -194,7 +194,7 @@ class ComputerStoreSQlConstants:
                     ('C0004', 'B0004'),
                     ('C0005', 'B0005');"""
     
-    PRODUCT_DATA = """INSERT INTO PRODUCT (PID, PType, PNAME, PPRICE, DESCRIPTION, PQUANTITY) 
+    PRODUCT_DATA = """INSERT INTO PRODUCT (PID, PTYPE, PNAME, PPRICE, DESCRIPTION, PQUANTITY) 
                     VALUES
                     ('P0001', 'C', 'Alienware', 1299.99, 'Gaming PC', 10),
                     ('P0002', 'L', 'MacBook Air', 999.99, 'Light Laptop', 15),
@@ -202,7 +202,7 @@ class ComputerStoreSQlConstants:
                     ('P0004', 'M', 'USB Hub', 19.99, '4-port Hub', 50),
                     ('P0005', 'L', 'Dell XPS', 1199.99, 'Ultrabook', 8);"""
 
-    COMPUTER_DATA = """INSERT INTO PRODUCT (PID, CPUTYPE) 
+    COMPUTER_DATA = """INSERT INTO COMPUTER (PID, CPUTYPE) 
                     VALUES
                     ('P0001', 'Intel Core i7 Processor');"""
     
@@ -215,7 +215,7 @@ class ComputerStoreSQlConstants:
                     ('P0003', 'MacBook', 3),
                     ('P0005', 'Dell XPS', 4);"""
     
-    APPEARS_IN_DATA = """INSERT INTO APPEARS_IN (BID, PID, QUANTITIY, PRICESOLD)
+    APPEARS_IN_DATA = """INSERT INTO APPEARS_IN (BID, PID, QUANTITY, PRICESOLD)
                     VALUES
                     ('B0001', 'P0001', 1, 1299.99),
                     ('B0002', 'P0002', 1, 949.99),

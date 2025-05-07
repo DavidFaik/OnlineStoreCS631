@@ -13,10 +13,13 @@ class SQLConnections:
         )
         self.cursor = self.conn.cursor()
         self.DB_NAME = "OnlineComputerStore"
+        self.cursor.execute(f"DROP SCHEMA IF EXISTS `{self.DB_NAME}`")
         self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
         self.conn.database = self.DB_NAME
+        
         self.create_tables()
         self.populate_tables()
+        self.update_constraints()
 
     def create_tables(self):
         tables = {
@@ -45,11 +48,10 @@ class SQLConnections:
     
         for table in tables:
             self.cursor.execute(f"TRUNCATE TABLE `{table}`")
-            print(f"Table '{table}' truncated successfully")
-        self.conn.commit()
-        print("All tables cleared successfully")
+            self.conn.commit()
 
         test_data = [
+            self.sql.CUSTOMER_DATA,
             self.sql.SILVER_AND_ABOVE_DATA, 
             self.sql.SHIPPING_ADDRESS_DATA, 
             self.sql.APPEARS_IN_DATA, 
