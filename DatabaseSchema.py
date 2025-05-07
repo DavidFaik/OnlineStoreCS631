@@ -14,7 +14,7 @@ class SQLConnections:
         self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
         self.conn.database = self.DB_NAME
         self.create_tables()
-        self.populate_tables()
+        #self.populate_tables()
 
     def create_tables(self):
         tables = {
@@ -77,11 +77,11 @@ class SQLConnections:
         #self.cursor.execute(insert_shipping_address, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
         #self.conn.commit()
     
-    def statistic_1(self):
+    def statistic_1(self, start_date=None, end_date=None):
         self.cursor.execute(self.sql.STATISTIC_1)
         return self.cursor.fetchall()
     
-    def statistic_2(self):
+    def statistic_1(self, start_date=None, end_date=None):
         self.cursor.execute(self.sql.STATISTIC_2)
         return self.cursor.fetchall()
     
