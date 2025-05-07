@@ -16,7 +16,7 @@ class SQLConnections:
         self.cursor.execute(f"DROP SCHEMA IF EXISTS `{self.DB_NAME}`")
         self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
         self.conn.database = self.DB_NAME
-        
+
         self.create_tables()
         self.populate_tables()
         self.update_constraints()
@@ -73,15 +73,17 @@ class SQLConnections:
         constraints = [
             self.sql.SILVER_AND_ABOVE_CONSTRAINTS, 
             self.sql.SHIPPING_ADDRESS_CONSTRAINTS, 
-            self.sql.APPEARS_IN_CONSTRAINTS, 
+            self.sql.APPEARS_IN_CONSTRAINTS_1, 
+            self.sql.APPEARS_IN_CONSTRAINTS_2,
             self.sql.BASKET_CONSTRAINTS, 
             self.sql.CREDIT_CARD_CONSTRAINTS, 
             self.sql.LAPTOP_CONSTAINTS, 
-            self.sql.PRODUCT_CONSTRAINTS, 
             self.sql.COMPUTER_CONSTRAINTS, 
             self.sql.PRINTER_CONSTRAINTS,
             self.sql.OFFER_PRODUCT_CONSTAINTS, 
-            self.sql.TRANSACTION_CONSTRAINTS
+            self.sql.TRANSACTION_CONSTRAINTS_1,
+            self.sql.TRANSACTION_CONSTRAINTS_2,
+            self.sql.TRANSACTION_CONSTRAINTS_3
         ]
 
         for table in constraints:

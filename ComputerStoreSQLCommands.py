@@ -120,13 +120,13 @@ class ComputerStoreSQlConstants:
                         ADD CONSTRAINT BASKETCIDFK FOREIGN KEY (CID) REFERENCES CUSTOMER(CID)
                         ON DELETE CASCADE ON UPDATE CASCADE;"""
 
-    APPEARS_IN_CONSTRAINTS = (
-        """ALTER TABLE APPEARS_IN
-        ADD CONSTRAINT APPEARSBIDFK FOREIGN KEY (BID) REFERENCES BASKET(BID)
-        ON DELETE CASCADE ON UPDATE CASCADE;""",
-        """ALTER TABLE APPEARS_IN
-        ADD CONSTRAINT APPEARSINPIDFK FOREIGN KEY (PID) REFERENCES PRODUCT(PID)
-        ON DELETE CASCADE ON UPDATE CASCADE;""")
+    APPEARS_IN_CONSTRAINTS_1 = """ALTER TABLE APPEARS_IN
+                                ADD CONSTRAINT APPEARSBIDFK FOREIGN KEY (BID) REFERENCES BASKET(BID)
+                                ON DELETE CASCADE ON UPDATE CASCADE;"""
+    
+    APPEARS_IN_CONSTRAINTS_2 = """ALTER TABLE APPEARS_IN
+                                ADD CONSTRAINT APPEARSINPIDFK FOREIGN KEY (PID) REFERENCES PRODUCT(PID)
+                                ON DELETE CASCADE ON UPDATE CASCADE;"""
 
     OFFER_PRODUCT_CONSTAINTS = """ALTER TABLE OFFER_PRODUCT
                         ADD CONSTRAINT OFFERPRODUCTPIDFK FOREIGN KEY (PID) REFERENCES PRODUCT(PID)
@@ -171,27 +171,21 @@ class ComputerStoreSQlConstants:
 
     SHIPPING_ADDRESS_DATA = """INSERT INTO SHIPPING_ADDRESS (CID, SANAME, RECEPIENTNAME, STREET, SNUMBER, CITY, ZIP, STATE, COUNTRY)
                         VALUES
-                        ('C0001', 'Edwards Home', 'Bob Edwards', 'Pleasant Street', 13, 'Newark', '07103', 'NJ', 'USA'),
-                        ('C0002', 'Dylan Work', 'Dylan Clark', 'Roosevelt Ave', 22, 'Princeton', '01827', 'NJ', 'USA'),
                         ('C0003', 'Riley Home', 'Riley Mucci', 'Sycamore Street', 25, 'Boston', '03452', 'MA', 'USA'),
                         ('C0004', 'Hardings Residence', 'Kimberly Harding', 'Warren Street', 202, 'Newark', '07103', 'NJ', 'USA'),
                         ('C0005', 'Richard Work', 'Richard Morena', 'Lock Street', 100, 'Newark', '07103', 'NJ', 'USA');"""
 
     TRANSACTION_DATA = """INSERT INTO TRANSACTION (BID, CCNUMBER, CID, SANAME, TDATE, TTAG) 
                         VALUES
-                        ('B0001', '123456789123456', '00001', 'Edwards Home', '2024-01-15', 'C'),
-                        ('B0002', '122256789993456', '00002', 'Dylan Work', '2024-02-12', 'S'),
-                        ('B0003', '110256780993336', '00003', 'Riley Home', '2024-03-20', 'C'),
-                        ('B0004', '11025670093336', '00004', 'Hardings Residence', '2024-04-05', 'E'),
-                        ('B0005', '34567809999999', '00005', 'Richard Work', '2024-05-01', 'L');"""
+                        ('B0001', '110256780993336', '00003', 'Riley Home', '2024-03-20', 'C'),
+                        ('B0002', '11025670093336', '00004', 'Hardings Residence', '2024-04-05', 'E'),
+                        ('B0003', '34567809999999', '00005', 'Richard Work', '2024-05-01', 'L');"""
 
     BASKET_DATA = """INSERT INTO BASKET (CID, BID) 
                     VALUES
-                    ('C0001', 'B0001'),
-                    ('C0002', 'B0002'),
-                    ('C0003', 'B0003'),
-                    ('C0004', 'B0004'),
-                    ('C0005', 'B0005');"""
+                    ('C0003', 'B0001'),
+                    ('C0004', 'B0002'),
+                    ('C0005', 'B0003');"""
     
     PRODUCT_DATA = """INSERT INTO PRODUCT (PID, PTYPE, PNAME, PPRICE, DESCRIPTION, PQUANTITY) 
                     VALUES
@@ -218,9 +212,7 @@ class ComputerStoreSQlConstants:
                     VALUES
                     ('B0001', 'P0001', 1, 1299.99),
                     ('B0002', 'P0002', 1, 949.99),
-                    ('B0003', 'P0003', 2, 299.99),
-                    ('B0004', 'P0004', 5, 17.99),
-                    ('B0005', 'P0005', 1, 1149.99);"""
+                    ('B0003', 'P0003', 2, 299.99);"""
     
     OFFER_PRODUCT_DATA = """INSERT INTO OFFER_PRODUCT (PID, OFFERPRICE) 
                     VALUES
