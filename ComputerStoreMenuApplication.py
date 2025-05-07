@@ -1,3 +1,5 @@
+# ComputerStoreMenuApplication.py for interface
+
 import wx
 import wx.grid as gridlib
 from DatabaseSchema import SQLConnections
