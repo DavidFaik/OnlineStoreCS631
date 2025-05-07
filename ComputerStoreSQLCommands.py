@@ -149,11 +149,11 @@ class ComputerStoreSQlConstants:
     """
     CUSTOMER_DATA = """INSERT INTO CUSTOMER (CID, FNAME, LNAME, EMAIL, ADDRESS, PHONE, STATUS)
                     VALUES
-                    ('00001', 'Bob', 'Edwards', 'bobedwards123@gmail.com', '13 Pleasant Street, Newark NJ, 07103', '9783022229', 'R'),
-                    ('00002', 'Dylan', 'Clark', 'clark3246@gmail.com', '22 Roosevelt Ave, Princeton NJ, 01827', '9788662409', 'R'),
-                    ('00003', 'Riley', 'Mucci', 'rileyam@icloud.com', '25 Sycamore Street, Boston MA, 03452', '1234567890', 'S'),
-                    ('00004', 'Kimberly', 'Harding', 'harding7134@gmail.com', '202 Warren Street, Newark NJ, 07103', '7653458903', 'S'),
-                    ('00005', 'Richard', 'Morena', 'ram6789@icloud.com', '100 Lock Street, Newark NJ, 07103', '9784923765', 'G');"""
+                    ('C0001', 'Bob', 'Edwards', 'bobedwards123@gmail.com', '13 Pleasant Street, Newark NJ, 07103', '9783022229', 'R'),
+                    ('C0002', 'Dylan', 'Clark', 'clark3246@gmail.com', '22 Roosevelt Ave, Princeton NJ, 01827', '9788662409', 'R'),
+                    ('C0003', 'Riley', 'Mucci', 'rileyam@icloud.com', '25 Sycamore Street, Boston MA, 03452', '1234567890', 'S'),
+                    ('C0004', 'Kimberly', 'Harding', 'harding7134@gmail.com', '202 Warren Street, Newark NJ, 07103', '7653458903', 'S'),
+                    ('C0005', 'Richard', 'Morena', 'ram6789@icloud.com', '100 Lock Street, Newark NJ, 07103', '9784923765', 'G');"""
     
     CREDIT_CARD_DATA = """INSERT INTO CREDIT_CARD (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
                     VALUES
@@ -163,6 +163,73 @@ class ComputerStoreSQlConstants:
                     ('11025670093336', '789', 'Kimberly Harding', 'Mastercard', '202 Warren Street, Newark NJ, 07103', '03/28', 00004),
                     ('34567809999999', '123', 'Richard Morena', 'Mastercard', '100 Lock Street, Newark NJ, 07103', '09/31', 00005);"""
     
+    SILVER_AND_ABOVE_DATA = """INSERT INTO SILVER_AND_ABOVE (CID, CREDITLINE) 
+                            VALUES
+                            ('C0003', 8000),
+                            ('C0004', 1000),
+                            ('C0005', 7500);"""
+
+    SHIPPING_ADDRESS_DATA = """INSERT INTO SHIPPING_ADDRESS (CID, SANAME, RECEPIENTNAME, STREET, SNUMBER, CITY, ZIP, STATE, COUNTRY)
+                        VALUES
+                        ('C0001', 'Edward's Home', 'Bob Edwards', 'Pleasant Street', 13, 'Newark', '07103', 'NJ', 'USA'),
+                        ('C0002', 'Dylan Work', 'Dylan Clark', 'Roosevelt Ave', 22, 'Princeton', '01827', 'NJ', 'USA'),
+                        ('C0003', 'Riley Home', 'Riley Mucci', 'Sycamore Street', 25, 'Boston', '03452', 'MA', 'USA'),
+                        ('C0004', 'Harding's Residence', 'Kimberly Harding', 'Warren Street', 202, 'Newark', '07103', 'NJ', 'USA'),
+                        ('C0005', 'Richard Work', 'Richard Morena', 'Lock Street', 100, 'Newark', '07103', 'NJ', 'USA');"""
+
+    TRANSACTION_DATA = """INSERT INTO TRANSACTION (BID, CCNUMBER, CID, SANAME, TDATE, TTAG) 
+                        VALUES
+                        ('B0001', '123456789123456', '00001', 'Edward's Home', '2024-01-15', 'C'),
+                        ('B0002', '122256789993456', '00002', 'Dylan Work', '2024-02-12', 'S'),
+                        ('B0003', '110256780993336', '00003', 'Riley Home', '2024-03-20', 'C'),
+                        ('B0004', '11025670093336', '00004', 'Harding's Residence', '2024-04-05', 'E'),
+                        ('B0005', '34567809999999', '00005', 'Richard Work', '2024-05-01', 'L');"""
+
+    BASKET_DATA = """INSERT INTO BASKET (CID, BID) 
+                    VALUES
+                    ('C0001', 'B0001'),
+                    ('C0002', 'B0002'),
+                    ('C0003', 'B0003'),
+                    ('C0004', 'B0004'),
+                    ('C0005', 'B0005');"""
+    
+    PRODUCT_DATA = """INSERT INTO PRODUCT (PID, PType, PNAME, PPRICE, DESCRIPTION, PQUANTITY) 
+                    VALUES
+                    ('P0001', 'C', 'Alienware', 1299.99, 'Gaming PC', 10),
+                    ('P0002', 'L', 'MacBook Air', 999.99, 'Light Laptop', 15),
+                    ('P0003', 'P', 'HP LaserJet', 299.99, 'Office Printer', 20),
+                    ('P0004', 'M', 'USB Hub', 19.99, '4-port Hub', 50),
+                    ('P0005', 'L', 'Dell XPS', 1199.99, 'Ultrabook', 8);"""
+
+    COMPUTER_DATA = """INSERT INTO PRODUCT (PID, CPUTYPE) 
+                    VALUES
+                    ('P0001', 'Intel Core i7 Processor');"""
+    
+    PRINTER_DATA = """INSERT INTO PRINTER (PID, PRINTERTYPE, RESOLUTION)
+                    VALUES
+                    ('P0003', 'laser', '1200dpi');"""
+    
+    LAPTOP_DATA = """INSERT INTO LAPTOP(PID, BTYPE, WEIGHT)
+                    VALUES
+                    ('P0003', 'MacBook', 3),
+                    ('P0005', 'Dell XPS', 4);"""
+    
+    APPEARS_IN_DATA = """INSERT INTO APPEARS_IN (BID, PID, QUANTITIY, PRICESOLD)
+                    VALUES
+                    ('B0001', 'P0001', 1, 1299.99),
+                    ('B0002', 'P0002', 1, 949.99),
+                    ('B0003', 'P0003', 2, 299.99),
+                    ('B0004', 'P0004', 5, 17.99),
+                    ('B0005', 'P0005', 1, 1149.99);"""
+    
+    OFFER_PRODUCT_DATA = """INSERT INTO OFFER_PRODUCT (PID, OFFERPRICE) 
+                    VALUES
+                    ('P0001', 1199.99),
+                    ('P0002', 899.99),
+                    ('P0003', 249.99),
+                    ('P0004', 14.99),
+                    ('P0005', 1099.99);"""
+
     """
     4) SQL Statistic Queries
     """

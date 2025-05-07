@@ -14,7 +14,7 @@ class SQLConnections:
         self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
         self.conn.database = self.DB_NAME
         self.create_tables()
-        #self.populate_tables()
+        self.populate_tables()
 
     def create_tables(self):
         tables = {
@@ -37,16 +37,49 @@ class SQLConnections:
             self.cursor.execute(ddl)
 
     def populate_tables(self):
-        test_data = [self.sql.CUSTOMER_DATA, self.sql.CREDIT_CARD_DATA]
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
+        self.cursor.execute("SHOW TABLES")
+        tables = [table[0] for table in self.cursor.fetchall()]
+    
+        for table in tables:
+            self.cursor.execute(f"TRUNCATE TABLE `{table}`")
+            print(f"Table '{table}' truncated successfully")
+        self.conn.commit()
+        print("All tables cleared successfully")
+
+        test_data = [
+            self.sql.SILVER_AND_ABOVE_DATA, 
+            self.sql.SHIPPING_ADDRESS_DATA, 
+            self.sql.APPEARS_IN_DATA, 
+            self.sql.BASKET_DATA, 
+            self.sql.CREDIT_CARD_DATA, 
+            self.sql.LAPTOP_DATA, 
+            self.sql.PRODUCT_DATA, 
+            self.sql.COMPUTER_DATA, 
+            self.sql.PRINTER_DATA,
+            self.sql.OFFER_PRODUCT_DATA, 
+            self.sql.TRANSACTION_DATA
+        ]
+        
         for data in test_data:
             self.cursor.execute(data)
             self.conn.commit()
 
     def update_constraints(self):
-        constraints = [self.sql.SILVER_AND_ABOVE_CONSTRAINTS, self.sql.SHIPPING_ADDRESS_CONSTRAINTS, self.sql.APPEARS_IN_CONSTRAINTS, 
-                       self.sql.BASKET_CONSTRAINTS, self.sql.CREDIT_CARD_CONSTRAINTS, self.sql.LAPTOP_CONSTAINTS, 
-                       self.sql.PRODUCT_CONSTRAINTS, self.sql.COMPUTER_CONSTRAINTS, self.sql.PRINTER_CONSTRAINTS,
-                       self.sql.OFFER_PRODUCT_CONSTAINTS, self.sql.TRANSACTION_CONSTRAINTS]
+        constraints = [
+            self.sql.SILVER_AND_ABOVE_CONSTRAINTS, 
+            self.sql.SHIPPING_ADDRESS_CONSTRAINTS, 
+            self.sql.APPEARS_IN_CONSTRAINTS, 
+            self.sql.BASKET_CONSTRAINTS, 
+            self.sql.CREDIT_CARD_CONSTRAINTS, 
+            self.sql.LAPTOP_CONSTAINTS, 
+            self.sql.PRODUCT_CONSTRAINTS, 
+            self.sql.COMPUTER_CONSTRAINTS, 
+            self.sql.PRINTER_CONSTRAINTS,
+            self.sql.OFFER_PRODUCT_CONSTAINTS, 
+            self.sql.TRANSACTION_CONSTRAINTS
+        ]
+
         for table in constraints:
             self.cursor.execute(table)
             self.conn.commit()
