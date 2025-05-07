@@ -169,7 +169,7 @@ class SaleStatistics(wx.Frame):
         self.Centre()
         self.Show()
     
-    def    def populate_grid(self, results, column_names):
+    def populate_grid(self, results, column_names):
         """Populate grid with query results"""
         num_rows = len(results)
         num_cols = len(column_names)
@@ -194,7 +194,7 @@ class SaleStatistics(wx.Frame):
         # Refresh grid
         self.grid.ForceRefresh()
         self.panel.Layout()
-        
+
     def statistic_1(self, event):
         pass
 
