@@ -20,7 +20,12 @@ class MenuApplication(wx.Frame):
         title_label.SetForegroundColour(FONT_COLOR)
         mainBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
-        main_menu_labels = [("Registration + Management", self.registrationAndManagement), ("Online Sales", self.onlineSales), ("Sale Statistics", self.saleStatistics)]
+        main_menu_labels = [
+            ("Registration + Management", self.registrationAndManagement), 
+            ("Online Sales", self.onlineSales), 
+            ("Sale Statistics", self.saleStatistics)
+            ]
+        
         for label, event in main_menu_labels:
             btn = wx.Button(mainWindow, label=label, size=(250, 40))
             btn.SetBackgroundColour(BUTTON_COLOR)
@@ -116,121 +121,188 @@ class OnlineSales(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Online Sales", size=(1000, 700))
 
-        BG_COLOR = wx.Colour("#D6EAF8")         
-        FONT_COLOR = wx.Colour("#003366")     
-        BUTTON_COLOR = wx.Colour("#FFFFFF")
+        self.BG_COLOR = wx.Colour("#D6EAF8")         
+        self.FONT_COLOR = wx.Colour("#003366")     
+        self.BUTTON_COLOR = wx.Colour("#FFFFFF")
 
         self.panel = wx.Panel(self)
-        self.panel.SetBackgroundColour(BG_COLOR)
+        self.panel.SetBackgroundColour(self.BG_COLOR)
         self.salesBox = wx.BoxSizer(wx.VERTICAL)
 
         title_label = wx.StaticText(self.panel, label="Registration and Management")
         title_font = wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         title_label.SetFont(title_font)
-        title_label.SetForegroundColour(FONT_COLOR)
+        title_label.SetForegroundColour(self.FONT_COLOR)
         self.salesBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
 class SaleStatistics(wx.Frame):
     def __init__(self,parent):
-        super().__init__(parent, title="Sale Statistics", size=(1000, 700))
+        super().__init__(parent, title="Sale Statistics", size=(1400, 800))
+        self.db = SQLConnections(host="localhost", user="root", password="KHlovesburton13!")
 
-        BG_COLOR = wx.Colour("#D6EAF8")         
-        FONT_COLOR = wx.Colour("#003366")     
-        BUTTON_COLOR = wx.Colour("#FFFFFF")
+        self.BG_COLOR = wx.Colour("#D6EAF8")         
+        self.FONT_COLOR = wx.Colour("#003366")     
+        self.BUTTON_COLOR = wx.Colour("#FFFFFF")
 
         self.panel = wx.Panel(self)
-        self.panel.SetBackgroundColour(BG_COLOR)
-        self.statisticsBox = wx.BoxSizer(wx.VERTICAL)
+        self.panel.SetBackgroundColour(self.BG_COLOR)
+        self.statistics_box = wx.BoxSizer(wx.VERTICAL)
 
         title_label = wx.StaticText(self.panel, label="Sale Statistics")
         title_font = wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         title_label.SetFont(title_font)
-        title_label.SetForegroundColour(FONT_COLOR)
-        self.statisticsBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
+        title_label.SetForegroundColour(self.FONT_COLOR)
+        self.statistics_box.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
+
+        columns_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        labels_column = wx.BoxSizer(wx.VERTICAL)
 
         statistic_labels = [
-            ("1) Total Amount Charged per Credit Card", self.statistic_1),
-            ("2) 10 Best Cutsomers", self.statistic_2),
-            ("3) Most Frequently Sold Products", self.statistic_3),
-            ("4) Products Sold to Highest Number of Customers", self.statistic_4),
-            ("5) Maximum Basket Total per Credit Card", self.statistic_5),
-            ("6) Average Product Price Per Type", self.statistic_6)
+            "1) Total Amount Charged per Credit Card",
+            "2) 10 Best Customers",
+            "3) Most Frequently Sold Products",
+            "4) Products Sold to Highest Number of Customers",
+            "5) Maximum Basket Total per Credit Card",
+            "6) Average Product Price Per Type"
         ]
 
-        for label,event in statistic_labels:
-            btn = wx.Button(self.panel, label=label, size=(400, 40))
-            btn.SetBackgroundColour(BUTTON_COLOR)
-            btn.SetForegroundColour(FONT_COLOR)
-            btn.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-            self.statisticsBox.Add(btn, 0, wx.ALIGN_CENTER | wx.ALL, 10)
-            btn.Bind(wx.EVT_BUTTON, event)
+        for label in statistic_labels:
+            stat_label = wx.StaticText(self.panel, label=label)
+            stat_label.SetForegroundColour(self.FONT_COLOR)
+            stat_label.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+            labels_column.Add(stat_label, 0, wx.ALL | wx.EXPAND, 15)
+        
+        inputs_column = wx.BoxSizer(wx.VERTICAL)
+        for i in range(2):
+            placeholder = wx.StaticText(self.panel, label="")
+            inputs_column.Add(placeholder, 0, wx.ALL, 20)
+        
+        for i in range(4):
+            date_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            
+            start_label = wx.StaticText(self.panel, label="Start:")
+            start_label.SetForegroundColour(self.FONT_COLOR)
+            date_sizer.Add(start_label, 0, wx.ALIGN_CENTER | wx.RIGHT, 5)
+            
+            start_date = wx.TextCtrl(self.panel, id=200+i*2, size=(100, -1))
+            start_date.SetHint("YYYY-MM-DD")
+            start_date.SetBackgroundColour(wx.Colour("#FFFFFF"))
+            start_date.SetForegroundColour(wx.Colour("#000000"))
+            date_sizer.Add(start_date, 0, wx.RIGHT, 10)
+            
+            end_label = wx.StaticText(self.panel, label="End:")
+            end_label.SetForegroundColour(self.FONT_COLOR)
+            date_sizer.Add(end_label, 0, wx.ALIGN_CENTER | wx.RIGHT, 15)
+            
+            end_date = wx.TextCtrl(self.panel, id=201+i*2, size=(100, -1))
+            end_date.SetHint("YYYY-MM-DD")
+            end_date.SetBackgroundColour(wx.Colour("#FFFFFF"))
+            end_date.SetForegroundColour(wx.Colour("#000000"))
+            date_sizer.Add(end_date, 0, wx.RIGHT, 10)
+            
+            inputs_column.Add(date_sizer, 0, wx.ALL, 15)
 
-        self.panel.SetSizer(self.statisticsBox)
+        buttons_column = wx.BoxSizer(wx.VERTICAL)
+        for i in range(6):
+            btn = wx.Button(self.panel, id=100+i, label=f"Generate Report {i+1}", size=(150, 30))
+            btn.SetBackgroundColour(self.BUTTON_COLOR)
+            btn.SetForegroundColour(self.FONT_COLOR)
+            buttons_column.Add(btn, 0, wx.ALL, 15)
+
+        column_data = [
+            {"id": 1, "columns": ["CCCNUMBER", "TOTAL_CHARGED"], "date_required": False},
+            {"id": 2, "columns": ["CID", "FNAME", "LNAME" "TOTAL_SPENT"], "date_required": False},
+            {"id": 3, "columns": ["PID", "PNAME", "TOTAL_SOLD"], "date_required": True, "date_ids": [200, 201]},
+            {"id": 4, "columns": ["PID", "PNAME", "NUM_CUSTOMERS"], "date_required": True, "date_ids": [202, 203]},
+            {"id": 5, "columns": ["CCNUMBER", "MAX_BASKET_TOTAl"], "date_required": True, "date_ids": [204, 205]},
+            {"id": 6, "columns": ["PTYPE", "AVG_AVG_SELLING_PRICE"], "date_required": True, "date_ids": [206, 207]}
+        ]
+
+        for i in range(6):
+            self.FindWindowById(100+i).Bind(wx.EVT_BUTTON, 
+                lambda event, stat_id=i+1, data=column_data[i]: 
+                self.on_generate_stat(event, stat_id, data))
+
+        columns_sizer.Add(labels_column, 1, wx.EXPAND | wx.LEFT, 20)
+        columns_sizer.Add(inputs_column, 1, wx.EXPAND)
+        columns_sizer.Add(buttons_column, 1, wx.EXPAND | wx.RIGHT, 20)
+        
+        self.statistics_box.Add(columns_sizer, 0, wx.EXPAND | wx.ALL, 10)
+        
+        self.grid = wx.grid.Grid(self.panel)
+        self.grid.CreateGrid(1, 1)
+        self.grid.SetColLabelSize(30)
+        self.grid.SetRowLabelSize(50)
+        self.grid.SetLabelBackgroundColour(self.BG_COLOR)
+        self.grid.SetLabelTextColour(self.FONT_COLOR)
+        
+        self.statistics_box.Add(self.grid, 1, wx.EXPAND | wx.ALL, 20)
+        self.panel.SetSizer(self.statistics_box)
         self.Centre()
         self.Show()
     
-    def populate_grid(self, results, column_names):
-        """Populate grid with query results"""
-        num_rows = len(results)
-        num_cols = len(column_names)
+    def on_generate_stat(self, event, stat_id, data):
+        """General function to generate reports for any statistic"""
+        self.clear_grid(len(data["columns"]), data["columns"])
         
-        # Create grid with appropriate dimensions
-        self.grid.CreateGrid(num_rows, num_cols)
+        try:
+            if data["date_required"]:
+                start_date, end_date = self.validate_dates(data["date_ids"][0], data["date_ids"][1])
+                if not start_date:
+                    return
+                
+                method_name = f"statistic_{stat_id}"
+                if hasattr(self.db, method_name):
+                    results = getattr(self.db, method_name)(start_date, end_date)
+                else:
+                    raise AttributeError(f"Database method {method_name} not found")
+            else:
+                method_name = f"statistic_{stat_id}"
+                if hasattr(self.db, method_name):
+                    results = getattr(self.db, method_name)()
+                else:
+                    raise AttributeError(f"Database method {method_name} not found")
+            self.populate_grid(results)
+            
+        except Exception as e:
+            wx.MessageBox(f"Error generating report: {str(e)}", "Database Error", 
+                          wx.OK | wx.ICON_ERROR)
+
+    def clear_grid(self, col_count, col_names):
+        """Clear grid & set up with query column names"""
+        if self.grid.GetNumberRows() > 0:
+            self.grid.DeleteRows(0, self.grid.GetNumberRows())
+        if self.grid.GetNumberCols() > 0:
+            self.grid.DeleteCols(0, self.grid.GetNumberCols())
+            
+        self.grid.AppendCols(col_count)
         
-        # Set column labels
-        for col_idx, col_name in enumerate(column_names):
+        for col_idx, col_name in enumerate(col_names):
             self.grid.SetColLabelValue(col_idx, col_name)
             
-        # Populate grid with data
+        self.grid.ForceRefresh()
+
+    def populate_grid(self, results):
+        """Populate grid with query results"""
+        if not results:
+            self.grid.AppendRows(1)
+            self.grid.SetCellValue(0, 0, "No results found")
+            return
+        
+        self.grid.AppendRows(len(results))  
+
+        for row_idx, row_data in enumerate(results):
+            for col_idx, cell_value in enumerate(row_data):
+                value = str(cell_value) if cell_value is not None else ""
+                self.grid.SetCellValue(row_idx, col_idx, value)
+            
         for row_idx, row_data in enumerate(results):
             for col_idx, cell_value in enumerate(row_data):
                 value = str(cell_value) if cell_value is not None else ""
                 self.grid.SetCellValue(row_idx, col_idx, value)
                 
-        # Auto-size columns
-        for col_idx in range(num_cols):
+        for col_idx in range(self.grid.GetNumberCols()):
             self.grid.AutoSizeColumn(col_idx)
-            
-        # Refresh grid
-        self.grid.ForceRefresh()
-        self.panel.Layout()
-
-    def statistic_1(self, event):
-        pass
-
-    def statistic_2(self, event):
-        pass
-
-    def statistic_3(self,event):
-        # Date picker panel for statistics that need date ranges
-        self.date_panel = wx.Panel(self.panel)
-        self.date_panel.SetBackgroundColour(BG_COLOR)
-        date_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        
-        # Start date picker
-        start_label = wx.StaticText(self.date_panel, label="Start Date:")
-        start_label.SetForegroundColour(FONT_COLOR)
-        date_sizer.Add(start_label, 0, wx.ALIGN_CENTER | wx.RIGHT, 5)
-        
-        self.start_date = wx.adv.DatePickerCtrl(self.date_panel, style=wx.adv.DP_DROPDOWN)
-        date_sizer.Add(self.start_date, 0, wx.RIGHT, 20)
-        
-        # End date picker
-        end_label = wx.StaticText(self.date_panel, label="End Date:")
-        end_label.SetForegroundColour(FONT_COLOR)
-        date_sizer.Add(end_label, 0, wx.ALIGN_CENTER | wx.RIGHT, 5)
-        
-        self.end_date = wx.adv.DatePickerCtrl(self.date_panel, style=wx.adv.DP_DROPDOWN)
-        date_sizer.Add(self.end_date, 0, wx.RIGHT, 20)
-
-    def statistic_4(self,event):
-        pass
-
-    def statistic_5(self,event):
-        pass
-
-    def statistic_6(self,event):
-        pass
 
 if __name__ == "__main__":
     app = wx.App(False)
