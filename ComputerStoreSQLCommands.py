@@ -1,3 +1,4 @@
+## ComputerStoreSQLCommands.py for all SQL statements
 ##Note: must populate tables first with basic data than add foregin keys to avoid referencing problems
 
 class ComputerStoreSQlConstants:
