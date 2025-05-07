@@ -263,3 +263,54 @@ class ComputerStoreSQlConstants:
                     WHERE T.BID = AI.BID AND AI.PID = P.PID AND T.TDATE BETWEEN %s AND %s
                     GROUP BY P.PTYPE;"""
 
+ # Credit‑Card
+    UPDATE_CREDIT_CARD = """UPDATE CREDIT_CARD
+                            SET SECNUMBER = %s,
+                                OWNERNAME = %s,
+                                CCTYPE     = %s,
+                                BILLADDRESS= %s,
+                                EXPDATE    = %s
+                            WHERE CCNUMBER = %s;"""
+
+    DELETE_CREDIT_CARD = "DELETE FROM CREDIT_CARD WHERE CCNUMBER = %s;"
+
+    # Shipping‑Address
+    INSERT_SHIPPING_ADDRESS = """INSERT INTO SHIPPING_ADDRESS
+                                 (CID, SANAME, RECEPIENTNAME, STREET, SNUMBER,
+                                  CITY, ZIP, STATE, COUNTRY)
+                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);"""
+
+    UPDATE_SHIPPING_ADDRESS = """UPDATE SHIPPING_ADDRESS
+                                 SET RECEPIENTNAME=%s, STREET=%s, SNUMBER=%s,
+                                     CITY=%s, ZIP=%s, STATE=%s, COUNTRY=%s
+                                 WHERE CID=%s AND SANAME=%s;"""
+
+    DELETE_SHIPPING_ADDRESS = """DELETE FROM SHIPPING_ADDRESS
+                                 WHERE CID=%s AND SANAME=%s;"""
+
+    # Basket & Transaction
+    INSERT_BASKET   = "INSERT INTO BASKET (CID, BID) VALUES (%s,%s);"
+
+    INSERT_APPEARS  = """INSERT INTO APPEARS_IN
+                         (BID, PID, QUANTITY, PRICESOLD)
+                         VALUES (%s,%s,%s,%s);"""
+
+    INSERT_TRANS    = """INSERT INTO TRANSACTION
+                         (BID, CCNUMBER, CID, SANAME, TDATE, TTAG)
+                         VALUES (%s,%s,%s,%s,%s,'C');"""
+
+    UPDATE_TRANS_STATUS = """UPDATE TRANSACTION
+                             SET TTAG = %s
+                             WHERE BID = %s;"""
+
+    SELECT_TRANS_STATUS = """SELECT TTAG FROM TRANSACTION WHERE BID = %s;"""
+
+    SELECT_TRANS_HISTORY = """SELECT T.BID, T.TDATE, T.TTAG, AI.PID, P.PNAME,
+                                     AI.QUANTITY, AI.PRICESOLD
+                              FROM TRANSACTION T
+                              JOIN APPEARS_IN AI ON T.BID = AI.BID
+                              JOIN PRODUCT P     ON AI.PID = P.PID
+                              WHERE T.CID = %s
+                              {extra_conditions}
+                              ORDER BY T.TDATE DESC;"""
+
