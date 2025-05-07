@@ -75,6 +75,30 @@ class DatabaseSchema:
             """
         self.cursor.execute(insert_shipping_address, (ccnumber, secnumber, ownername, cctype, billaddress, expdate, storedcardcid))
         self.conn.commit()
+    
+    def statistic_1(self):
+        self.cursor.execute(self.sql.STATISTIC_1)
+        return self.cursor.fetchall()
+    
+    def statistic_2(self):
+        self.cursor.execute(self.sql.STATISTIC_2)
+        return self.cursor.fetchall()
+    
+    def statistic_3(self, start_date, end_date):
+        self.cursor.execute(self.sql.STATISTIC_3, (start_date, end_date))
+        return self.cursor.fetchall()
+    
+    def statistic_4(self, start_date, end_date):
+        self.cursor.execute(self.sql.STATISTIC_4, (start_date, end_date))
+        return self.cursor.fetchall()
+    
+    def statistic_5(self, start_date, end_date):
+        self.cursor.execute(self.sql.STATISTIC_5, (start_date, end_date))
+        return self.cursor.fetchall()
+    
+    def statistic_6(self, start_date, end_date):
+        self.cursor.execute(self.sql.STATISTIC_6, (start_date, end_date))
+        return self.cursor.fetchall()
 
 if __name__ == "__main__":
     schema = DatabaseSchema(
