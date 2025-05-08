@@ -8,6 +8,9 @@ class MenuApplication(wx.Frame):
     def __init__(self, parent):
         #Main Window: 1) Registration + Management 2) Online Sales 3) Sale Statstics 
         super().__init__(parent, title="Online Computer Store", size=(500, 400))    
+
+        self.db = SQLConnections(host="localhost", user="root", password="KHlovesburton13!")
+
         BG_COLOR = wx.Colour("#D6EAF8")         
         FONT_COLOR = wx.Colour("#003366")     
         BUTTON_COLOR = wx.Colour("#FFFFFF")
@@ -140,7 +143,7 @@ class OnlineSales(wx.Frame):
 class SaleStatistics(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Sale Statistics", size=(1400, 800))
-        self.db = SQLConnections(host="localhost", user="root", password="KHlovesburton13!")
+        self.db = parent.db
 
         self.BG_COLOR = wx.Colour("#D6EAF8")         
         self.FONT_COLOR = wx.Colour("#003366")     
@@ -282,7 +285,7 @@ class SaleStatistics(wx.Frame):
         
         for col_idx, col_name in enumerate(col_names):
             self.grid.SetColLabelValue(col_idx, col_name)
-            self.grid.SetColSize(col_idx, 350)
+            self.grid.SetColSize(col_idx, 150)
             
         self.grid.ForceRefresh()
 
