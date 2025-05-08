@@ -59,7 +59,7 @@ class RegistrationAndManagement(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Registration and Management", size=(1000, 700))
         self.db = parent.db
-        
+
         self.BG_COLOR = wx.Colour("#D6EAF8")         
         self.FONT_COLOR = wx.Colour("#003366")     
         self.BUTTON_COLOR = wx.Colour("#FFFFFF")
@@ -495,7 +495,7 @@ class SaleStatistics(wx.Frame):
             buttons_column.Add(btn, 0, wx.ALL, 15)
 
         column_data = [
-            {"id": 1, "columns": ["CCCNUMBER", "TOTAL_CHARGED"], "date_required": False},
+            {"id": 1, "columns": ["CCNUMBER", "TOTAL_CHARGED"], "date_required": False},
             {"id": 2, "columns": ["CID", "FNAME", "LNAME", "TOTAL_SPENT"], "date_required": False},
             {"id": 3, "columns": ["PID", "PNAME", "TOTAL_SOLD"], "date_required": True, "date_ids": [200, 201]},
             {"id": 4, "columns": ["PID", "PNAME", "NUM_CUSTOMERS"], "date_required": True, "date_ids": [202, 203]},

@@ -308,7 +308,7 @@ class ComputerStoreSQlConstants:
                                  WHERE CID=%s AND SANAME=%s;"""
 
     """
-    7) SQL Basket & Transaction INSERT, UPDATE & DELETE
+    7) SQL Basket & Transactions INSERT, UPDATE & DELETE
     """
     INSERT_BASKET   = "INSERT INTO BASKET (CID, BID) VALUES (%s,%s);"
 
