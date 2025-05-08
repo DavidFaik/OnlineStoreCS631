@@ -29,7 +29,7 @@ class ComputerStoreSQlConstants:
                 (CCNUMBER CHAR(16) NOT NULL,
                 SECNUMBER CHAR(3) NOT NULL,
                 OWNERNAME VARCHAR(30) NOT NULL,
-                CCType VARCHAR(10) NOT NULL,
+                CCTYPE VARCHAR(10) NOT NULL,
                 BILLADDRESS VARCHAR(100),
                 EXPDATE CHAR(5),
                 STOREDCARDCID CHAR(5),
