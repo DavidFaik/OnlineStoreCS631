@@ -75,7 +75,7 @@ class ComputerStoreSQlConstants:
 
     PRODUCT_DEF = """CREATE TABLE IF NOT EXISTS PRODUCT
                 (PID CHAR(5) NOT NULL,
-                PType CHAR, 
+                PTYPE CHAR, 
                 PNAME VARCHAR(30),
                 PPRICE DECIMAL(10,2),
                 DESCRIPTION VARCHAR(15),
