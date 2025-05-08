@@ -82,12 +82,147 @@ class RegistrationAndManagement(wx.Frame):
             btn.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
             self.regManBox.Add(btn, 0, wx.ALIGN_CENTER | wx.ALL, 10)
             btn.Bind(wx.EVT_BUTTON, event)
+
+                # Buttons for registration submit & management dialogs
+        submit_btn = wx.Button(self.panel, label="Submit Registration",
+                               size=(180, 35))
+        submit_btn.SetBackgroundColour(self.BUTTON_COLOR)
+        submit_btn.SetForegroundColour(self.FONT_COLOR)
+        submit_btn.Bind(wx.EVT_BUTTON, self._submit_customer)
+        self.box.Add(submit_btn, 0, wx.ALIGN_CENTER | wx.ALL, 15)
+
+        cc_btn = wx.Button(self.panel, label="Manage Credit‑Cards",
+                           size=(180, 35))
+        sa_btn = wx.Button(self.panel, label="Manage Shipping Addresses",
+                           size=(220, 35))
+
+        for b, handler in [(cc_btn, self._open_cc),
+                           (sa_btn, self._open_sa)]:
+            b.SetBackgroundColour(self.BUTTON_COLOR)
+            b.SetForegroundColour(self.FONT_COLOR)
+            b.Bind(wx.EVT_BUTTON, handler)
+            self.box.Add(b, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         
         self.panel.SetSizer(self.regManBox)
         self.Centre()
 
+            # helpers
+    def _submit_customer(self, evt):
+        fn  = self.form_fields["first_name"].GetValue().strip()
+        ln  = self.form_fields["last_name"].GetValue().strip()
+        em  = self.form_fields["email"].GetValue().strip()
+        addr= self.form_fields["address"].GetValue().strip()
+        ph  = self.form_fields["phone"].GetValue().strip()
+        if not fn or not ln:
+            wx.MessageBox("First & last names are mandatory.")
+            return
+        cid = self.db._next_id("CUSTOMER", "CID")
+        self.db.register_customer(cid, fn, ln, em, addr, ph)
+        wx.MessageBox(f"Customer registered with CID {cid}", "Success")
+
+    def _open_cc(self, evt):
+        CreditCardDialog(self, self.db).Show()
+
+    def _open_sa(self, evt):
+        ShippingAddressDialog(self, self.db).Show()
+
     def login(self, event):
         self.regManBox.Clear(True)
+
+    class CreditCardDialog(wx.Frame):
+    def __init__(self, parent, db):
+        super().__init__(parent, title="Credit‑Card Management",
+                         size=(500, 400))
+        self.db = db
+
+        pnl = wx.Panel(self)
+        g = wx.GridBagSizer(5, 5)
+
+        labels = ["CC Number", "Sec #", "Owner", "Type",
+                  "Billing Addr", "Exp (MM/YY)", "CID"]
+        self.f = {}
+        for r, lab in enumerate(labels):
+            g.Add(wx.StaticText(pnl, label=lab), pos=(r, 0),
+                  flag=wx.ALIGN_RIGHT | wx.ALL, border=3)
+            tc = wx.TextCtrl(pnl)
+            self.f[lab] = tc
+            g.Add(tc, pos=(r, 1), flag=wx.EXPAND | wx.ALL, border=3)
+
+        add_upd = wx.Button(pnl, label="Add/Update")
+        delete  = wx.Button(pnl, label="Delete")
+        g.Add(add_upd, pos=(len(labels), 0), flag=wx.ALL, border=4)
+        g.Add(delete , pos=(len(labels), 1), flag=wx.ALL, border=4)
+
+        add_upd.Bind(wx.EVT_BUTTON, self._save)
+        delete. Bind(wx.EVT_BUTTON, self._delete)
+
+        pnl.SetSizerAndFit(g)
+
+    def _vals(self):
+        return [self.f[k].GetValue().strip() for k in self.f]
+
+    def _save(self, evt):
+        (cc, sec, own, typ, bill, exp, cid) = self._vals()
+        try:
+            self.db.register_credit_card(cc, sec, own, typ, bill, exp, cid)
+        except mysql.connector.Error:
+            self.db.update_credit_card(cc, sec, own, typ, bill, exp)
+        wx.MessageBox("Saved.")
+
+    def _delete(self, evt):
+        cc = self.f["CC Number"].GetValue().strip()
+        if cc:
+            self.db.delete_credit_card(cc)
+            wx.MessageBox("Deleted.")
+
+#  Shipping‑address dialog
+
+class ShippingAddressDialog(wx.Frame):
+    def __init__(self, parent, db):
+        super().__init__(parent, title="Shipping Address Management",
+                         size=(550, 440))
+        self.db = db
+
+        pnl = wx.Panel(self)
+        g = wx.GridBagSizer(5, 5)
+
+        labs = ["CID", "SA Name", "Recipient", "Street", "No.",
+                "City", "ZIP", "State", "Country"]
+        self.f = {}
+        for r, lab in enumerate(labs):
+            g.Add(wx.StaticText(pnl, label=lab), pos=(r, 0),
+                  flag=wx.ALL, border=3)
+            tc = wx.TextCtrl(pnl)
+            self.f[lab] = tc
+            g.Add(tc, pos=(r, 1), flag=wx.EXPAND | wx.ALL, border=3)
+
+        btn_add = wx.Button(pnl, label="Add/Update")
+        btn_del = wx.Button(pnl, label="Delete")
+        g.Add(btn_add, pos=(len(labs), 0), flag=wx.ALL, border=4)
+        g.Add(btn_del, pos=(len(labs), 1), flag=wx.ALL, border=4)
+
+        btn_add.Bind(wx.EVT_BUTTON, self._save)
+        btn_del.Bind(wx.EVT_BUTTON, self._delete)
+        pnl.SetSizerAndFit(g)
+
+    def _vals(self):
+        return [self.f[k].GetValue().strip() for k in self.f]
+
+    def _save(self, evt):
+        (cid, san, rec, st, num, city, zp, stt, ctry) = self._vals()
+        try:
+            self.db.register_shipping_address(cid, san, rec, st,
+                                              num, city, zp, stt, ctry)
+        except mysql.connector.Error:
+            self.db.update_shipping_address(cid, san, rec, st,
+                                            num, city, zp, stt, ctry)
+        wx.MessageBox("Saved.")
+
+    def _delete(self, evt):
+        cid = self.f["CID"].GetValue().strip()
+        san = self.f["SA Name"].GetValue().strip()
+        self.db.delete_shipping_address(cid, san)
+        wx.MessageBox("Deleted.")
 
         #btn1 = wx.Button(mainWindow, label="Registration Information", size=(250, 40))
         #btn2 = wx.Button(mainWindow, label="Credit Card Information", size=(250, 40))
@@ -121,6 +256,7 @@ class RegistrationAndManagement(wx.Frame):
             # Add to the form sizer
             form_sizer.Add(text_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
             form_sizer.Add(text_field, 0, wx.EXPAND)
+        
 
 class OnlineSales(wx.Frame):
     def __init__(self,parent):
@@ -140,6 +276,145 @@ class OnlineSales(wx.Frame):
         title_label.SetForegroundColour(self.FONT_COLOR)
         self.salesBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
+        # Customer ID row
+        cid_row = wx.BoxSizer(wx.HORIZONTAL)
+        cid_row.Add(wx.StaticText(self.panel, label="Customer ID: "),
+                    0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.cid_tc = wx.TextCtrl(self.panel, size=(80, -1))
+        cid_row.Add(self.cid_tc, 0, wx.RIGHT, 20)
+
+        # Credit‑card row
+        cc_row = wx.BoxSizer(wx.HORIZONTAL)
+        cc_row.Add(wx.StaticText(self.panel, label="Credit Card #: "),
+                   0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.cc_tc = wx.TextCtrl(self.panel, size=(140, -1))
+        cc_row.Add(self.cc_tc, 0, wx.RIGHT, 20)
+
+        # Ship address row
+        sa_row = wx.BoxSizer(wx.HORIZONTAL)
+        sa_row.Add(wx.StaticText(self.panel, label="Ship‑Addr Name: "),
+                   0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.sa_tc = wx.TextCtrl(self.panel, size=(120, -1))
+        sa_row.Add(self.sa_tc, 0, wx.RIGHT, 20)
+
+        # Product add row
+        prod_row = wx.BoxSizer(wx.HORIZONTAL)
+        prod_row.Add(wx.StaticText(self.panel, label="Product ID: "),
+                     0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.pid_tc = wx.TextCtrl(self.panel, size=(80, -1))
+        prod_row.Add(self.pid_tc, 0, wx.RIGHT, 10)
+
+        prod_row.Add(wx.StaticText(self.panel, label="Qty: "),
+                     0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 5)
+        self.qty_tc = wx.TextCtrl(self.panel, size=(50, -1))
+        prod_row.Add(self.qty_tc, 0, wx.RIGHT, 10)
+
+        add_btn = wx.Button(self.panel, label="Add Item")
+        prod_row.Add(add_btn, 0)
+
+        # Basket grid
+        self.grid = wx.grid.Grid(self.panel)
+        self.grid.CreateGrid(0, 4)
+        for i, h in enumerate(["PID", "Name", "Qty", "Price"]):
+            self.grid.SetColLabelValue(i, h)
+
+        # Control buttons
+        ctrl_row = wx.BoxSizer(wx.HORIZONTAL)
+        place_btn  = wx.Button(self.panel, label="Place Order")
+        status_btn = wx.Button(self.panel, label="Check Status")
+        hist_btn   = wx.Button(self.panel, label="Transaction History")
+        for b in (place_btn, status_btn, hist_btn):
+            ctrl_row.Add(b, 0, wx.ALL, 10)
+
+        # Layout
+        for s in (cid_row, cc_row, sa_row, prod_row):
+            self.salesBox.Add(s, 0, wx.ALL, 5)
+        self.salesBox.Add(self.grid, 1, wx.EXPAND | wx.ALL, 15)
+        self.salesBox.Add(ctrl_row, 0, wx.ALIGN_CENTER)
+
+        self.panel.SetSizer(self.salesBox)
+        self.Centre()
+
+        # Data
+        self.current_bid = None
+
+        # Bindings
+        add_btn.Bind(wx.EVT_BUTTON, self._add_item)
+        place_btn.Bind(wx.EVT_BUTTON, self._place_order)
+        status_btn.Bind(wx.EVT_BUTTON, self._status)
+        hist_btn.Bind(wx.EVT_BUTTON, self._history)
+
+    # basket helpers
+    def _add_item(self, evt):
+        pid = self.pid_tc.GetValue().strip()
+        qty = self.qty_tc.GetValue().strip()
+        if not pid or not qty.isdigit():
+            wx.MessageBox("Enter Product ID and numeric quantity.")
+            return
+        prod = self.db.get_product(pid)
+        if not prod:
+            wx.MessageBox("Unknown product.")
+            return
+        price, name = prod
+        qty = int(qty)
+
+        if self.current_bid is None:
+            cid = self.cid_tc.GetValue().strip()
+            if not cid:
+                wx.MessageBox("Enter Customer ID first.")
+                return
+            self.current_bid = self.db.create_basket(cid)
+        self.db.add_to_basket(self.current_bid, pid, qty, price)
+
+        # Display in grid
+        r = self.grid.GetNumberRows()
+        self.grid.AppendRows(1)
+        for c, val in enumerate([pid, name, str(qty), f"{price:.2f}"]):
+            self.grid.SetCellValue(r, c, val)
+
+    def _place_order(self, evt):
+        if self.current_bid is None:
+            wx.MessageBox("Basket is empty.")
+            return
+        cid = self.cid_tc.GetValue().strip()
+        cc  = self.cc_tc.GetValue().strip()
+        sa  = self.sa_tc.GetValue().strip()
+        if not all([cid, cc, sa]):
+            wx.MessageBox("Fill Customer ID, Credit Card and Ship‑Addr.")
+            return
+        self.db.place_order(cid, self.current_bid, cc, sa)
+        wx.MessageBox(f"Order placed (BID {self.current_bid}).")
+
+        # Reset basket
+        self.current_bid = None
+        self.grid.DeleteRows(0, self.grid.GetNumberRows())
+
+    def _status(self, evt):
+        bid = wx.GetTextFromUser("Enter BID:", "Order Status")
+        if bid:
+            st = self.db.get_order_status(bid)
+            wx.MessageBox(f"Status: {st or 'Not found'}.")
+
+    def _history(self, evt):
+        cid = self.cid_tc.GetValue().strip()
+        if not cid:
+            wx.MessageBox("Enter Customer ID.")
+            return
+        rows = self.db.transaction_history(cid)
+        dlg = wx.Frame(self, title="Transaction History",
+                       size=(700, 400))
+        g = wx.grid.Grid(dlg)
+        g.CreateGrid(0, 7)
+        for i, h in enumerate(["BID", "Date", "Tag", "PID",
+                               "Name", "Qty", "Price"]):
+            g.SetColLabelValue(i, h)
+        for rdata in rows:
+            r = g.GetNumberRows()
+            g.AppendRows(1)
+            for c, val in enumerate(rdata):
+                g.SetCellValue(r, c, str(val))
+        dlg.Show()
+        
 class SaleStatistics(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Sale Statistics", size=(1400, 800))
