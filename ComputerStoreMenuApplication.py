@@ -524,7 +524,7 @@ class SaleStatistics(wx.Frame):
             {"id": 3, "columns": ["PID", "PNAME", "TOTAL_SOLD"], "date_required": True, "date_ids": [200, 201]},
             {"id": 4, "columns": ["PID", "PNAME", "NUM_CUSTOMERS"], "date_required": True, "date_ids": [202, 203]},
             {"id": 5, "columns": ["CCNUMBER", "MAX_BASKET_TOTAl"], "date_required": True, "date_ids": [204, 205]},
-            {"id": 6, "columns": ["PTYPE", "AVG_AVG_SELLING_PRICE"], "date_required": True, "date_ids": [206, 207]}
+            {"id": 6, "columns": ["PTYPE", "AVG_SELLING_PRICE"], "date_required": True, "date_ids": [206, 207]}
         ]
 
         for i in range(6):
