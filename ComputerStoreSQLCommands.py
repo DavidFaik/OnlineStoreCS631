@@ -515,8 +515,8 @@ class ComputerStoreSQlConstants:
     """
     INSERT_CREDIT_CARD = """INSERT INTO SHIPPING_ADDRESS
                                  (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, 
-                                 BILLADDRESS, EXPDATE)
-                                 VALUES (%s,%s,%s,%s,%s,%s);"""
+                                 BILLADDRESS, EXPDATE, STOREDCARDCID)
+                                 VALUES (%s,%s,%s,%s,%s,%s,%s);"""
     
     UPDATE_CREDIT_CARD = """UPDATE CREDIT_CARD
                             SET SECNUMBER = %s,

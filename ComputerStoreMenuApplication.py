@@ -1,5 +1,6 @@
 # ComputerStoreMenuApplication.py for interface
 
+import mysql
 import wx
 import wx.grid as gridlib
 from DatabaseSchema import SQLConnections
@@ -85,9 +86,12 @@ class RegistrationAndManagement(wx.Frame):
             self.regManBox.Add(btn, 0, wx.ALIGN_CENTER | wx.ALL, 10)
             btn.Bind(wx.EVT_BUTTON, event)
         """
-                # Buttons for registration submit & management dialogs
-        submit_btn = wx.Button(self.panel, label="Submit Registration",
-                               size=(180, 35))
+        # Registration information section
+        self.registrationInformation(None)
+
+        # Buttons for registration submit & management dialogs
+        submit_btn = wx.Button(self.panel, label="Submit Registration", size=(180, 35))
+
         submit_btn.SetBackgroundColour(self.BUTTON_COLOR)
         submit_btn.SetForegroundColour(self.FONT_COLOR)
         submit_btn.Bind(wx.EVT_BUTTON, self._submit_customer)
@@ -260,6 +264,8 @@ class ShippingAddressDialog(wx.Frame):
             # Add to the form sizer
             form_sizer.Add(text_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
             form_sizer.Add(text_field, 0, wx.EXPAND)
+            
+        self.regManBox.Add(form_sizer, 0, wx.EXPAND | wx.ALL, 10)
         
 
 class OnlineSales(wx.Frame):

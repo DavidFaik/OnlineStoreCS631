@@ -143,10 +143,10 @@ class SQLConnections:
         self.conn.commit()
 
     def update_credit_card(self, ccnumber, secnumber, ownername,
-                           cctype, billaddress, expdate):
+                           cctype, billaddress, expdate, cid):
         self.cursor.execute(self.sql.UPDATE_CREDIT_CARD,
                             (secnumber, ownername, cctype,
-                             billaddress, expdate, ccnumber))
+                             billaddress, expdate, ccnumber, cid))
         self.conn.commit()
 
     def delete_credit_card(self, ccnumber):
