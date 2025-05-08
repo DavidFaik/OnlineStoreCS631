@@ -76,7 +76,7 @@ class ComputerStoreSQlConstants:
     PRODUCT_DEF = """CREATE TABLE IF NOT EXISTS PRODUCT
                 (PID CHAR(5) NOT NULL,
                 PType CHAR, 
-                PNAME VARCHAR(15),
+                PNAME VARCHAR(30),
                 PPRICE DECIMAL(10,2),
                 DESCRIPTION VARCHAR(15),
                 PQUANTITY INT DEFAULT 0,
@@ -193,11 +193,11 @@ class ComputerStoreSQlConstants:
     
     CREDIT_CARD_DATA = """INSERT INTO CREDIT_CARD (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, BILLADDRESS, EXPDATE, STOREDCARDCID)
                     VALUES
-                    ('123456789123456', '827', 'Bob Edwards', 'Mastercard', '13 Pleasant Street, Newark NJ, 07103', '04/28', 00001),
-                    ('122256789993456', '437', 'Dylan Clark', 'Discover', '22 Roosevelt Ave, Princeton NJ, 01827', '08/29', 00002),
-                    ('110256780993336', '789', 'Riley Mucci', 'Mastercard', '25 Sycamore Street, Boston MA, 03452', '07/35', C0003),
-                    ('11025670093336', '789', 'Kimberly Harding', 'Mastercard', '202 Warren Street, Newark NJ, 07103', '03/28', C0004),
-                    ('34567809999999', '123', 'Richard Morena', 'Mastercard', '100 Lock Street, Newark NJ, 07103', '09/31', C0005),
+                    ('123456789123456', '827', 'Bob Edwards', 'Mastercard', '13 Pleasant Street, Newark NJ, 07103', '04/28', 'C0001'),
+                    ('122256789993456', '437', 'Dylan Clark', 'Discover', '22 Roosevelt Ave, Princeton NJ, 01827', '08/29', 'C0002'),
+                    ('110256780993336', '789', 'Riley Mucci', 'Mastercard', '25 Sycamore Street, Boston MA, 03452', '07/35', 'C0003'),
+                    ('11025670093336', '789', 'Kimberly Harding', 'Mastercard', '202 Warren Street, Newark NJ, 07103', '03/28', 'C0004'),
+                    ('34567809999999', '123', 'Richard Morena', 'Mastercard', '100 Lock Street, Newark NJ, 07103', '09/31', 'C0005'),
                     ('4000002940000006', '610', 'Olivia Carter', 'Visa', '62 Elm St, Clifton NJ, 07103', '08/29', 'C0006'),
                     ('4000000019370007', '836', 'Ethan Wells', 'Mastercard', '32 Grove St, Bayonne NJ, 07060', '11/28', 'C0007'),
                     ('4000000204850008', '311', 'Sophia Hernandez', 'Visa', '184 Maple St, Paterson NJ, 07002', '04/35', 'C0008'),
@@ -256,7 +256,7 @@ class ComputerStoreSQlConstants:
                         VALUES
                         ('C0003', 'Riley Home', 'Riley Mucci', 'Sycamore Street', 25, 'Boston', '03452', 'MA', 'USA'),
                         ('C0004', 'Hardings Residence', 'Kimberly Harding', 'Warren Street', 202, 'Newark', '07103', 'NJ', 'USA'),
-                        ('C0005', 'Richard Work', 'Richard Morena', 'Lock Street', 100, 'Newark', '07103', 'NJ', 'USA')
+                        ('C0005', 'Richard Work', 'Richard Morena', 'Lock Street', 100, 'Newark', '07103', 'NJ', 'USA'),
                         ('C0006', 'Carter Home', 'Olivia Carter', 'Elm St', 62, 'Clifton', '07103', 'NJ', 'USA'),
                         ('C0007', 'Wells Home', 'Ethan Wells', 'Grove St', 32, 'Bayonne', '07060', 'NJ', 'USA'),
                         ('C0008', 'Hernandez Home', 'Sophia Hernandez', 'Maple St', 184, 'Paterson', '07002', 'NJ', 'USA'),
