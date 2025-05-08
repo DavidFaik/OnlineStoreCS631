@@ -75,23 +75,14 @@ class RegistrationAndManagement(wx.Frame):
         title_label.SetForegroundColour(self.FONT_COLOR)
         self.regManBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
         
-        #btn1 = wx.Button(self.panel, label="Register", size=(250, 40))
-        #btn2 = wx.Button(self.panel, label="Login", size=(250, 40))
-
-        #There is no self.registrationInformation method
-        """for btn, event in [(btn1, self.registrationInformation), (btn2, self.login)]:
-            btn.SetBackgroundColour(BUTTON_COLOR)
-            btn.SetForegroundColour(FONT_COLOR)
-            btn.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-            self.regManBox.Add(btn, 0, wx.ALIGN_CENTER | wx.ALL, 10)
-            btn.Bind(wx.EVT_BUTTON, event)
-        """
-        # Registration information section
-        self.registrationInformation(None)
-
+        self.form_fields = {}
+        
+        # Show registration form directly
+        self.show_registration_form()
+        
         # Buttons for registration submit & management dialogs
-        submit_btn = wx.Button(self.panel, label="Submit Registration", size=(180, 35))
-
+        submit_btn = wx.Button(self.panel, label="Submit Registration",
+                               size=(180, 35))
         submit_btn.SetBackgroundColour(self.BUTTON_COLOR)
         submit_btn.SetForegroundColour(self.FONT_COLOR)
         submit_btn.Bind(wx.EVT_BUTTON, self._submit_customer)
@@ -111,14 +102,42 @@ class RegistrationAndManagement(wx.Frame):
         
         self.panel.SetSizer(self.regManBox)
         self.Centre()
+    
+    def show_registration_form(self):
+        """Create and display the registration form fields"""
+        # Create a form title
+        title_label = wx.StaticText(self.panel, label="Registration Information")
+        title_font = wx.Font(16, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
+        title_label.SetFont(title_font)
+        title_label.SetForegroundColour(self.FONT_COLOR)
+        self.regManBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
-            # helpers AttributeError: 'RegistrationAndManagement' object has no attribute 'form_fields'
+        # Create the form
+        form_sizer = wx.FlexGridSizer(rows=6, cols=2, vgap=15, hgap=10)
+        form_sizer.AddGrowableCol(1, 1)
+        
+        field_labels = ["First Name:", "Last Name:", "Email:", "Address:", "Phone:"]
+        
+        for label in field_labels:
+            text_label = wx.StaticText(self.panel, label=label)
+            text_label.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+            
+            field_name = label.replace(":", "").replace(" ", "_").lower()
+            text_field = wx.TextCtrl(self.panel, size=(300, -1))
+            self.form_fields[field_name] = text_field
+            
+            form_sizer.Add(text_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
+            form_sizer.Add(text_field, 0, wx.EXPAND)
+        
+        # Add the form to the main sizer
+        self.regManBox.Add(form_sizer, 0, wx.EXPAND | wx.ALL, 10)
+
     def _submit_customer(self, evt):
-        fn  = self.form_fields["first_name"].GetValue().strip()
-        ln  = self.form_fields["last_name"].GetValue().strip()
-        em  = self.form_fields["email"].GetValue().strip()
-        addr= self.form_fields["address"].GetValue().strip()
-        ph  = self.form_fields["phone"].GetValue().strip()
+        fn = self.form_fields["first_name"].GetValue().strip()
+        ln = self.form_fields["last_name"].GetValue().strip()
+        em = self.form_fields["email"].GetValue().strip()
+        addr = self.form_fields["address"].GetValue().strip()
+        ph = self.form_fields["phone"].GetValue().strip()
         if not fn or not ln:
             wx.MessageBox("First & last names are mandatory.")
             return
@@ -245,27 +264,21 @@ class ShippingAddressDialog(wx.Frame):
         self.regManBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
 
         form_sizer = wx.FlexGridSizer(rows=6, cols=2, vgap=15, hgap=10)
-        form_sizer.AddGrowableCol(1, 1)  # Make the second column expandable
+        form_sizer.AddGrowableCol(1, 1)
         
-        # Text fields with labels
         field_labels = ["First Name:", "Last Name:", "Email:", "Address:", "Phone:"]
         self.form_fields = {}
         
         for label in field_labels:
-            # Create the label
             text_label = wx.StaticText(self.panel, label=label)
             text_label.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
             
-            # Create the text input field
             field_name = label.replace(":", "").replace(" ", "_").lower()
             text_field = wx.TextCtrl(self.panel, size=(300, -1))
             self.form_fields[field_name] = text_field
             
-            # Add to the form sizer
             form_sizer.Add(text_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
             form_sizer.Add(text_field, 0, wx.EXPAND)
-            
-        self.regManBox.Add(form_sizer, 0, wx.EXPAND | wx.ALL, 10)
         
 
 class OnlineSales(wx.Frame):
