@@ -511,9 +511,14 @@ class ComputerStoreSQlConstants:
                     GROUP BY P.PTYPE;"""
 
     """
-    5) SQL Credit Card INSERT, UPDATE & DELETE
+    5) SQL Credit Card and Customer INSERT, UPDATE & DELETE
     """
-    INSERT_CREDIT_CARD = """INSERT INTO SHIPPING_ADDRESS
+    INSERT_CUSTOMER = """INSERT INTO CUSTOMER
+                                (CID, FNAME, LNAME, EMAIL, 
+                                 ADDRESS, PHONE, STATUS)
+                                 VALUES (%s,%s,%s,%s,%s,%s,%s);"""
+    
+    INSERT_CREDIT_CARD = """INSERT INTO CREDIT_CARD
                                  (CCNUMBER, SECNUMBER, OWNERNAME, CCTYPE, 
                                  BILLADDRESS, EXPDATE, STOREDCARDCID)
                                  VALUES (%s,%s,%s,%s,%s,%s,%s);"""
