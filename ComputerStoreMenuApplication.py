@@ -58,38 +58,40 @@ class MenuApplication(wx.Frame):
 class RegistrationAndManagement(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Registration and Management", size=(1000, 700))
-
-        BG_COLOR = wx.Colour("#D6EAF8")         
-        FONT_COLOR = wx.Colour("#003366")     
-        BUTTON_COLOR = wx.Colour("#FFFFFF")
+        self.db = parent.db
+        
+        self.BG_COLOR = wx.Colour("#D6EAF8")         
+        self.FONT_COLOR = wx.Colour("#003366")     
+        self.BUTTON_COLOR = wx.Colour("#FFFFFF")
 
         self.panel = wx.Panel(self)
-        self.panel.SetBackgroundColour(BG_COLOR)
+        self.panel.SetBackgroundColour(self.BG_COLOR)
         self.regManBox = wx.BoxSizer(wx.VERTICAL)
 
         title_label = wx.StaticText(self.panel, label="Registration and Management")
         title_font = wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         title_label.SetFont(title_font)
-        title_label.SetForegroundColour(FONT_COLOR)
+        title_label.SetForegroundColour(self.FONT_COLOR)
         self.regManBox.Add(title_label, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 20)
         
-        btn1 = wx.Button(self.panel, label="Register", size=(250, 40))
-        btn2 = wx.Button(self.panel, label="Login", size=(250, 40))
+        #btn1 = wx.Button(self.panel, label="Register", size=(250, 40))
+        #btn2 = wx.Button(self.panel, label="Login", size=(250, 40))
 
-        for btn, event in [(btn1, self.registrationInformation), (btn2, self.login)]:
+        #There is no self.registrationInformation method
+        """for btn, event in [(btn1, self.registrationInformation), (btn2, self.login)]:
             btn.SetBackgroundColour(BUTTON_COLOR)
             btn.SetForegroundColour(FONT_COLOR)
             btn.SetFont(wx.Font(12, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
             self.regManBox.Add(btn, 0, wx.ALIGN_CENTER | wx.ALL, 10)
             btn.Bind(wx.EVT_BUTTON, event)
-
+        """
                 # Buttons for registration submit & management dialogs
         submit_btn = wx.Button(self.panel, label="Submit Registration",
                                size=(180, 35))
         submit_btn.SetBackgroundColour(self.BUTTON_COLOR)
         submit_btn.SetForegroundColour(self.FONT_COLOR)
         submit_btn.Bind(wx.EVT_BUTTON, self._submit_customer)
-        self.box.Add(submit_btn, 0, wx.ALIGN_CENTER | wx.ALL, 15)
+        self.regManBox.Add(submit_btn, 0, wx.ALIGN_CENTER | wx.ALL, 15)
 
         cc_btn = wx.Button(self.panel, label="Manage Credit‑Cards",
                            size=(180, 35))
@@ -101,12 +103,12 @@ class RegistrationAndManagement(wx.Frame):
             b.SetBackgroundColour(self.BUTTON_COLOR)
             b.SetForegroundColour(self.FONT_COLOR)
             b.Bind(wx.EVT_BUTTON, handler)
-            self.box.Add(b, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+            self.regManBox.Add(b, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         
         self.panel.SetSizer(self.regManBox)
         self.Centre()
 
-            # helpers
+            # helpers AttributeError: 'RegistrationAndManagement' object has no attribute 'form_fields'
     def _submit_customer(self, evt):
         fn  = self.form_fields["first_name"].GetValue().strip()
         ln  = self.form_fields["last_name"].GetValue().strip()
@@ -122,14 +124,16 @@ class RegistrationAndManagement(wx.Frame):
 
     def _open_cc(self, evt):
         CreditCardDialog(self, self.db).Show()
+        #These do not work
 
     def _open_sa(self, evt):
         ShippingAddressDialog(self, self.db).Show()
+        #These do not work 
 
     def login(self, event):
         self.regManBox.Clear(True)
 
-    class CreditCardDialog(wx.Frame):
+class CreditCardDialog(wx.Frame):
     def __init__(self, parent, db):
         super().__init__(parent, title="Credit‑Card Management",
                          size=(500, 400))
@@ -261,6 +265,7 @@ class ShippingAddressDialog(wx.Frame):
 class OnlineSales(wx.Frame):
     def __init__(self,parent):
         super().__init__(parent, title="Online Sales", size=(1000, 700))
+        self.db = parent.db
 
         self.BG_COLOR = wx.Colour("#D6EAF8")         
         self.FONT_COLOR = wx.Colour("#003366")     
