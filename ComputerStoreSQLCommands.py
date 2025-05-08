@@ -125,7 +125,7 @@ class ComputerStoreSQlConstants:
     TRANSACTION_CONSTRAINTS_3 = """ALTER TABLE TRANSACTION
                                 ADD CONSTRAINT TRANSACTIONBIDFK FOREIGN KEY (BID) REFERENCES BASKET(BID)
                                 ON DELETE CASCADE ON UPDATE CASCADE;"""
-    
+        
     BASKET_CONSTRAINTS = """ALTER TABLE BASKET
                         ADD CONSTRAINT BASKETCIDFK FOREIGN KEY (CID) REFERENCES CUSTOMER(CID)
                         ON DELETE CASCADE ON UPDATE CASCADE;"""
@@ -480,7 +480,8 @@ class ComputerStoreSQlConstants:
                     FROM CUSTOMER C, TRANSACTION T, APPEARS_IN AI
                     WHERE C.CID =T.CID AND T.BID = AI.BID
                     GROUP BY C.CID, C.FNAME, C.LNAME
-                    ORDER BY TOTAL_SPENT DESC;"""
+                    ORDER BY TOTAL_SPENT DESC
+                    LIMIT 10;"""
     
     STATISTIC_3 = """SELECT AI.PID, P.PNAME, SUM(AI.QUANTITY) AS TOTAL_SOLD
                     FROM TRANSACTION T, APPEARS_IN AI, PRODUCT P

@@ -1,6 +1,6 @@
 # DatabaseSchema.py connects SQL statements to the SQL server (Connects front end & back end)
-
 import mysql.connector
+from mysql.connector import IntegrityError
 from ComputerStoreSQLCommands import ComputerStoreSQlConstants
 from datetime import date
 
@@ -21,6 +21,7 @@ class SQLConnections:
         self.create_tables()
         self.populate_tables()
         self.update_constraints()
+        
 
     def create_tables(self):
         tables = {
@@ -89,8 +90,9 @@ class SQLConnections:
 
         for table in constraints:
             self.cursor.execute(table)
-            self.conn.commit()
-    
+        self.conn.commit()
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+
     def statistic_1(self, start_date=None, end_date=None):
         self.cursor.execute(self.sql.STATISTIC_1)
         return self.cursor.fetchall()
@@ -118,9 +120,19 @@ class SQLConnections:
     def _next_id(self, table, column) -> str:
         self.cursor.execute(f"SELECT {column} FROM {table} ORDER BY {column} DESC LIMIT 1")
         row = self.cursor.fetchone()
-        if row and row[0] and row[0].isdigit():
-            return str(int(row[0]) + 1).zfill(5)
-        return "00001"
+        prefix_map = {
+            'BASKET': 'B',
+            'CUSTOMER': 'C',
+            'PRODUCT': 'P'
+        }
+        prefix = prefix_map.get(table)  # Default to '' if not found
+
+        if row and row[0]:
+            last_id = row[0]
+            if last_id[1:].isdigit():
+                num = int(last_id[1:]) + 1
+                return f"{prefix}{num:04d}"
+        return f"{prefix}0001"
 
     # Credit‑Card
     def register_credit_card(self, ccnumber, secnumber, ownername,
@@ -167,19 +179,33 @@ class SQLConnections:
 
     # Basket & Transaction
     def create_basket(self, cid) -> str:
-        bid = self._next_id("BASKET", "BID")
-        self.cursor.execute(self.sql.INSERT_BASKET, (cid, bid))
-        self.conn.commit()
-        return bid
+        try:
+            bid = self._next_id("BASKET", "BID")
+            self.cursor.execute(self.sql.INSERT_BASKET, (cid, bid))
+            self.conn.commit()
+            return bid
+        except IntegrityError as e:
+            if "foreign key constraint fails" in str(e).lower():
+                return "Error: Customer ID not in Database."
+            return f"Integrity Error: {e}"
 
     def add_to_basket(self, bid, pid, qty, price_sold):
         self.cursor.execute(self.sql.INSERT_APPEARS, (bid, pid, qty, price_sold))
         self.conn.commit()
 
     def place_order(self, cid, bid, ccnumber, saname):
-        self.cursor.execute(self.sql.INSERT_TRANS,
-                            (bid, ccnumber, cid, saname, date.today()))
-        self.conn.commit()
+        if bid is None:
+            return "Error: Basket ID is missing."
+
+        try:
+            self.cursor.execute(self.sql.INSERT_TRANS,
+                                (bid, ccnumber, cid, saname, date.today()))
+            self.conn.commit()
+            return "OK"
+        except IntegrityError as e:
+            if "foreign key constraint fails" in str(e).lower():
+                return "Error: Invalid credit card number, shipping address or customer ID."
+            return f"Integrity Error: {e}"
 
     def update_order_status(self, bid, status_tag):
         self.cursor.execute(self.sql.UPDATE_TRANS_STATUS, (status_tag, bid))

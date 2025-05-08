@@ -275,7 +275,7 @@ class OnlineSales(wx.Frame):
         self.panel.SetBackgroundColour(self.BG_COLOR)
         self.salesBox = wx.BoxSizer(wx.VERTICAL)
 
-        title_label = wx.StaticText(self.panel, label="Registration and Management")
+        title_label = wx.StaticText(self.panel, label="Online Sales")
         title_font = wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         title_label.SetFont(title_font)
         title_label.SetForegroundColour(self.FONT_COLOR)
@@ -368,7 +368,12 @@ class OnlineSales(wx.Frame):
             if not cid:
                 wx.MessageBox("Enter Customer ID first.")
                 return
-            self.current_bid = self.db.create_basket(cid)
+            result = self.db.create_basket(cid)
+            if isinstance(result, str) and (result.startswith("Error:") or result.startswith("Integrity Error:")):
+                wx.MessageBox(result)
+                return
+            else:
+                self.current_bid = result
         self.db.add_to_basket(self.current_bid, pid, qty, price)
 
         # Display in grid
@@ -387,8 +392,12 @@ class OnlineSales(wx.Frame):
         if not all([cid, cc, sa]):
             wx.MessageBox("Fill Customer ID, Credit Card and Ship‑Addr.")
             return
-        self.db.place_order(cid, self.current_bid, cc, sa)
-        wx.MessageBox(f"Order placed (BID {self.current_bid}).")
+        
+        result = self.db.place_order(cid, self.current_bid, cc, sa)
+        if result == "OK":
+            wx.MessageBox(f"Order placed (BID {self.current_bid}).")
+        else:
+            wx.MessageBox(result)
 
         # Reset basket
         self.current_bid = None
@@ -398,7 +407,7 @@ class OnlineSales(wx.Frame):
         bid = wx.GetTextFromUser("Enter BID:", "Order Status")
         if bid:
             st = self.db.get_order_status(bid)
-            wx.MessageBox(f"Status: {st or 'Not found'}.")
+            wx.MessageBox(f"Status: {st or 'Not found'}")
 
     def _history(self, evt):
         cid = self.cid_tc.GetValue().strip()
@@ -532,11 +541,14 @@ class SaleStatistics(wx.Frame):
         
         try:
             if data["date_required"]:
-                start_date = data["date_ids"][0]
-                end_date = data["date_ids"][1]
-                if not start_date:
+                start_date = self.FindWindowById(data["date_ids"][0]).GetValue()
+                end_date = self.FindWindowById(data["date_ids"][1]).GetValue()
+    
+                if not start_date or not end_date:
+                    wx.MessageBox("Start and end dates must be provided.", "Input Error",
+                              wx.OK | wx.ICON_WARNING)
                     return
-                
+            
                 method_name = f"statistic_{stat_id}"
                 if hasattr(self.db, method_name):
                     results = getattr(self.db, method_name)(start_date, end_date)
@@ -565,7 +577,7 @@ class SaleStatistics(wx.Frame):
         
         for col_idx, col_name in enumerate(col_names):
             self.grid.SetColLabelValue(col_idx, col_name)
-            self.grid.SetColSize(col_idx, 150)
+            self.grid.SetColSize(col_idx, 200)
             
         self.grid.ForceRefresh()
 
