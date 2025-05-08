@@ -144,10 +144,10 @@ class SQLConnections:
 
     # Credit‑Card
     def register_credit_card(self, ccnumber, secnumber, ownername,
-                           cctype, billaddress, expdate):
+                           cctype, billaddress, expdate, cid):
         self.cursor.execute(self.sql.INSERT_CREDIT_CARD,
-                            (secnumber, ownername, cctype,
-                             billaddress, expdate, ccnumber))
+                            (ccnumber, secnumber, ownername, cctype,
+                             billaddress, expdate, cid))
         self.conn.commit()
 
     def update_credit_card(self, ccnumber, secnumber, ownername,

@@ -140,7 +140,7 @@ class RegistrationAndManagement(wx.Frame):
             wx.MessageBox("First & last names are mandatory.")
             return
         cid = self.db._next_id("CUSTOMER", "CID")
-        self.db.register_customer(cid, fn, ln, em, addr, ph)
+        self.db.register_customer(cid, fn, ln, em, addr, ph,'R')
         wx.MessageBox(f"Customer registered with CID {cid}", "Success")
 
     def _open_cc(self, evt):
