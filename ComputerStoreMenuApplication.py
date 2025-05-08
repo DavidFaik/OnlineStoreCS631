@@ -77,10 +77,8 @@ class RegistrationAndManagement(wx.Frame):
         
         self.form_fields = {}
         
-        # Show registration form directly
         self.show_registration_form()
         
-        # Buttons for registration submit & management dialogs
         submit_btn = wx.Button(self.panel, label="Submit Registration",
                                size=(180, 35))
         submit_btn.SetBackgroundColour(self.BUTTON_COLOR)
@@ -147,11 +145,9 @@ class RegistrationAndManagement(wx.Frame):
 
     def _open_cc(self, evt):
         CreditCardDialog(self, self.db).Show()
-        #These do not work
 
     def _open_sa(self, evt):
         ShippingAddressDialog(self, self.db).Show()
-        #These do not work 
 
     def login(self, event):
         self.regManBox.Clear(True)
@@ -237,13 +233,13 @@ class ShippingAddressDialog(wx.Frame):
 
     def _save(self, evt):
         (cid, san, rec, st, num, city, zp, stt, ctry) = self._vals()
-        try:
-            self.db.register_shipping_address(cid, san, rec, st,
+        result = self.db.register_shipping_address(cid, san, rec, st,
                                               num, city, zp, stt, ctry)
-        except mysql.connector.Error:
-            self.db.update_shipping_address(cid, san, rec, st,
-                                            num, city, zp, stt, ctry)
-        wx.MessageBox("Saved.")
+        if isinstance(result, str) and (result.startswith("Error:") or result.startswith("Integrity Error:")):
+            wx.MessageBox(result)
+            return
+        else:
+            wx.MessageBox("Saved.")
 
     def _delete(self, evt):
         cid = self.f["CID"].GetValue().strip()

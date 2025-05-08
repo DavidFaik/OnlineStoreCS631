@@ -134,6 +134,14 @@ class SQLConnections:
                 return f"{prefix}{num:04d}"
         return f"{prefix}0001"
 
+    # Customer
+    def register_customer(self, cid, fname, lname,
+                           email,address, phone, status):
+        self.cursor.execute(self.sql.INSERT_CUSTOMER,
+                            (cid, fname, lname,
+                           email,address, phone, status))
+        self.conn.commit()
+
     # Credit‑Card
     def register_credit_card(self, ccnumber, secnumber, ownername,
                            cctype, billaddress, expdate):
@@ -163,10 +171,16 @@ class SQLConnections:
 
     def update_shipping_address(self, cid, saname, recepientname, street,
                                 snumber, city, zipc, state, country):
-        self.cursor.execute(self.sql.UPDATE_SHIPPING_ADDRESS,
+        try:
+            self.cursor.execute(self.sql.UPDATE_SHIPPING_ADDRESS,
                             (recepientname, street, snumber,
                              city, zipc, state, country, cid, saname))
-        self.conn.commit()
+            self.conn.commit()
+            return 
+        except IntegrityError as e:
+            if "foreign key constraint fails" in str(e).lower():
+                return "Error: Violates referential Integrity constraints."
+            return f"Integrity Error: {e}"
 
     def delete_shipping_address(self, cid, saname):
         self.cursor.execute(self.sql.DELETE_SHIPPING_ADDRESS, (cid, saname))
